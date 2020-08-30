@@ -1,5 +1,5 @@
 body {
-  background-color: red;
+  background-color: white;
 }
 @tailwind base;
 
@@ -9,4 +9,12 @@ body {
 
 .btn {
   @apply bg-purple-500 text-white font-bold border-purple-700 rounded py-2 px-4;
+}
+
+.repos-list {
+  columns: 3;
+}
+
+.repos-list li {
+  break-inline: avoid-column;
 }

@@ -1,11 +1,10 @@
 import React from "react"
-import Header from '../components/header'
+import Header from "../components/header"
+import Repos from "../components/repos"
 
 export default () => (
-<div>
-
-<Header></Header>
-</div>
+  <div>
+    <Header></Header>
+    <Repos></Repos>
+  </div>
 )
-  
-
