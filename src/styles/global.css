@@ -1,0 +1,12 @@
+body {
+  background-color: red;
+}
+@tailwind base;
+
+@tailwind components;
+
+@tailwind utilities;
+
+.btn {
+  @apply bg-purple-500 text-white font-bold border-purple-700 rounded py-2 px-4;
+}
