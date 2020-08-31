@@ -1,9 +1,9 @@
-import React from "react"
+import React from "react";
 
 export default props => (
   <li className="flex items-center ">
     <div className="w-10/12 overflow-x-hidden">
-      <h4 className="text-pink-600 font-bold">{props.repo.name}</h4>
+      <h4 className="text-pink-600 font-bold truncate">{props.repo.name}</h4>
       <p
         className="text-sm text-gray-800 overflow-y-hidden"
         style={{ height: "1.5em" }}
@@ -17,4 +17,4 @@ export default props => (
       </a>
     </div>
   </li>
-)
+);
