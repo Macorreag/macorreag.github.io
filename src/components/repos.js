@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 // import repos from "../data/repos"
-import Repo from "./repo";
+import Repo from './repo';
 
 export default () => {
   const [repos, setRepos] = useState([]);
   const [reposCount, setReposCount] = useState([]);
 
   useEffect(() => {
-    const data = sessionStorage.getItem("repos");
+    const data = sessionStorage.getItem('repos');
     let myRepos;
     if (data) {
       myRepos = JSON.parse(data);
@@ -18,13 +18,12 @@ export default () => {
     }
 
     async function fetchRepos() {
-      const response = await fetch(
-        "https://api.github.com/users/macorreag/repos"
-      );
+      const response = await fetch('https://api.github.com/users/macorreag/repos');
       let myRepos = await response.json();
       setReposCount(myRepos.legth);
       // Caching de peticiones AJAX en SessionStorage
-      sessionStorage.setItem("repos", JSON.stringify(myRepos));
+      sessionStorage.setItem('repos', JSON.stringify(myRepos));
+      myRepos = myRepos.slice(1, 13);
       setRepos(myRepos);
     }
 
