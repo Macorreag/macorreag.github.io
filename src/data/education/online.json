@@ -1,0 +1,16 @@
+{
+  "slug": "on-line",
+  "title": "Cursos en linea",
+  "description": "Cursos realizados en plataformas de educación en internet",
+  "items": [
+    {
+      "name": "Curso Gatsby",
+      "platform": "Coursera",
+      "url": "https://www.coursera.org/account/accomplishments/verify/GRTD8Q54ZCUQ"
+    },
+    {
+      "name": "Curso de Machine Learning",
+      "platform": "Coursera"
+    }
+  ]
+}

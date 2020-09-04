@@ -1,3 +1,7 @@
 {
-    "editor.formatOnSave": true
+  "emmet.includeLanguages": {
+    "javascript": "javascriptreact"
+  },
+  "emmet.excludeLanguages": ["markdown"],
+  "editor.formatOnSave": true
 }

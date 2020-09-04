@@ -1,0 +1,15 @@
+{
+  "slug": "others",
+  "title": "Otros logros académicos",
+  "description": "Talleres, diplomados y conferencias en las que participado",
+  "items": [
+    {
+      "name": "SOL & TECH",
+      "degree": "Computación forense y delitos informáticos"
+    },
+    {
+      "name": "Oxford All Education Solutions",
+      "degree": "Level A2"
+    }
+  ]
+}
