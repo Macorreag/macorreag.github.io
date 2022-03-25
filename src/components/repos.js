@@ -36,7 +36,7 @@ export default () => {
         <h2 className="text-3xl font-bold">Mi trabajo Open Source</h2>
         <p>Colaboración y contribución de código</p>
       </header>
-      <ul className="repos-list">
+      <ul className="grid grid-cols-2 md:grid-cols-3">
         {repos.map(repo => {
           return <Repo repo={repo} key={repo.id}></Repo>;
         })}

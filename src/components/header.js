@@ -22,7 +22,7 @@ export default () => (
         <img
           src={illustration}
           alt="Persona al lado de una pagina web"
-          style={{ height: '300px' }}
+          className="h-48 min-h-10 max-h-20 hidden sm:block"
         ></img>
       </div>
       <div>

@@ -6,11 +6,11 @@ export default () => {
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
+    const data = sessionStorage.getItem('posts');
     if (data) {
       setPosts(JSON.parse(data));
     }
     let myPosts;
-    const data = sessionStorage.getItem('posts');
     async function getMediumPosts() {
       const response = await fetch(
         'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fmedium.com%2Ffeed%2F%40macorreag',

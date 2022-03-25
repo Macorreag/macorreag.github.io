@@ -1,11 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 body {
   background-color: white;
 }
-@tailwind base;
 
-@tailwind components;
-
-@tailwind utilities;
 
 body {
   @apply bg-gray-100;

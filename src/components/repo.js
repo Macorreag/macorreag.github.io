@@ -1,7 +1,7 @@
 import React from "react";
 
 export default props => (
-  <li className="flex items-center ">
+  <li className="flex items-center" style={{ maxWidth: "250px" }}>
     <div className="w-10/12 overflow-x-hidden">
       <h4 className="text-pink-600 font-bold truncate">{props.repo.name}</h4>
       <p
