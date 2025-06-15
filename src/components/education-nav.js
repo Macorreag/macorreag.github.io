@@ -24,10 +24,10 @@ export default props => {
           const { node } = element;
           return (
             <article className="flex flex-1 bg-white shadow m-4 max-w-sm p-4">
-              <header className='flex flex-col justify-between'>
+              <header className="flex flex-col justify-between">
                 <p className="font-bold leading-loose">{node.title}</p>
                 <p className="font-light">{node.description}</p>
-                <div className='mt-6'>
+                <div className="mt-6">
                   <Link to={`/${node.slug}`} className="btn">
                     Ir
                   </Link>

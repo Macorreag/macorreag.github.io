@@ -1,7 +1,44 @@
 {
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
+    "source.organizeImports": "explicit"
+  },
+  "editor.rulers": [100],
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "files.eol": "\n",
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
   "emmet.includeLanguages": {
     "javascript": "javascriptreact"
   },
   "emmet.excludeLanguages": ["markdown"],
-  "editor.formatOnSave": true
+  "javascript.preferences.quoteStyle": "single",
+  "typescript.preferences.quoteStyle": "single",
+  "tailwindCSS.includeLanguages": {
+    "javascript": "javascript",
+    "html": "HTML"
+  },
+  "tailwindCSS.experimental.classRegex": [
+    ["clsx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"],
+    ["className\\s*=\\s*[\"']([^\"']*)[\"']", "([^\"'\\s]*)"]
+  ],
+  "github.copilot.enable": {
+    "*": true,
+    "yaml": false,
+    "plaintext": false,
+    "markdown": true
+  },
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/public": true,
+    "**/.cache": true,
+    "**/docs-ai": true
+  },
+  "files.exclude": {
+    "**/.cache": true,
+    "**/node_modules": true,
+    "**/public": true
+  }
 }
