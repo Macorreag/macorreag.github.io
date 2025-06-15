@@ -67,3 +67,32 @@ yarn-error.log
 .pnp.js
 # Yarn Integrity file
 .yarn-integrity
+
+# AI and Documentation
+docs-ai/
+*.ai-temp
+.copilot/
+.github-copilot/
+
+# IDE and Editor
+.vscode/launch.json
+.idea/
+*.swp
+*.swo
+
+# Build and Cache
+.cache/
+public/
+.gatsby-context.js
+
+# Environment and Config
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Temporary files
+*.tmp
+*.temp
+.eslintcache

@@ -1,5 +1,4 @@
-
-const defaultTheme = require('tailwindcss/defaultTheme')
+const defaultTheme = require('tailwindcss/defaultTheme');
 
 module.exports = {
   purge: [],
@@ -9,15 +8,12 @@ module.exports = {
       screens: {
         xs: '480px',
       },
-      minHeight: (theme) => ({
+      minHeight: theme => ({
         ...theme('spacing'),
       }),
     },
   },
   variants: {},
-  plugins: [
-  ],
-  content: [
-    "./src/**/*.{js,jsx,ts,tsx}",
-  ]
-}
+  plugins: [],
+  content: ['./src/**/*.{js,jsx,ts,tsx}'],
+};

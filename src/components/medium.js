@@ -13,7 +13,7 @@ export default () => {
     let myPosts;
     async function getMediumPosts() {
       const response = await fetch(
-        'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fmedium.com%2Ffeed%2F%40macorreag',
+        'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fmedium.com%2Ffeed%2F%40macorreag'
       );
       myPosts = await response.json();
       sessionStorage.setItem('posts', JSON.stringify(myPosts));

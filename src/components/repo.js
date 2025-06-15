@@ -1,13 +1,10 @@
-import React from "react";
+import React from 'react';
 
 export default props => (
-  <li className="flex items-center" style={{ maxWidth: "250px" }}>
+  <li className="flex items-center" style={{ maxWidth: '250px' }}>
     <div className="w-10/12 overflow-x-hidden">
       <h4 className="text-pink-600 font-bold truncate">{props.repo.name}</h4>
-      <p
-        className="text-sm text-gray-800 overflow-y-hidden"
-        style={{ height: "1.5em" }}
-      >
+      <p className="text-sm text-gray-800 overflow-y-hidden" style={{ height: '1.5em' }}>
         {props.repo.description}
       </p>
     </div>

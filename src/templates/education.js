@@ -43,7 +43,7 @@ export default props => {
 };
 
 export const query = graphql`
-  query($slug: String) {
+  query ($slug: String) {
     educationJson(slug: { eq: $slug }) {
       title
       description
