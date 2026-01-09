@@ -1,0 +1,91 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "🚀 Gatsby Develop",
+      "type": "shell",
+      "command": "npm run develop -- --host 0.0.0.0",
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "isBackground": true,
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "detail": "Inicia el servidor de desarrollo de Gatsby"
+    },
+    {
+      "label": "📦 Gatsby Build",
+      "type": "shell",
+      "command": "npm run build",
+      "problemMatcher": [],
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "detail": "Genera la versión de producción del sitio"
+    },
+    {
+      "label": "🌐 Gatsby Serve",
+      "type": "shell",
+      "command": "npm run serve -- --host 0.0.0.0 --port 9000",
+      "problemMatcher": [],
+      "group": "test",
+      "isBackground": true,
+      "dependsOn": "📦 Gatsby Build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "detail": "Sirve la versión de producción localmente"
+    },
+    {
+      "label": "🧹 Gatsby Clean",
+      "type": "shell",
+      "command": "npm run clean",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "detail": "Limpia la caché y archivos generados de Gatsby"
+    },
+    {
+      "label": "🚢 Deploy to GitHub Pages",
+      "type": "shell",
+      "command": "npm run deploy",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "detail": "Despliega el sitio a GitHub Pages"
+    },
+    {
+      "label": "📥 Install Dependencies",
+      "type": "shell",
+      "command": "npm install",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "detail": "Instala las dependencias del proyecto"
+    },
+    {
+      "label": "✨ Format Code",
+      "type": "shell",
+      "command": "npm run format",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "detail": "Formatea el código con Prettier"
+    }
+  ]
+}

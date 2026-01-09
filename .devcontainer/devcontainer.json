@@ -1,0 +1,60 @@
+{
+  "name": "Gatsby Portfolio - macorreag.github.io",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:16",
+  
+  // Configurar las características del contenedor
+  "features": {
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
+
+  // Configurar el puerto de reenvío para Gatsby develop
+  "forwardPorts": [8000, 9000],
+  "portsAttributes": {
+    "8000": {
+      "label": "Gatsby Dev Server",
+      "onAutoForward": "openBrowser"
+    },
+    "9000": {
+      "label": "Gatsby Serve (Production Preview)",
+      "onAutoForward": "notify"
+    }
+  },
+
+  // Comandos que se ejecutan después de crear el contenedor
+  "postCreateCommand": "npm install",
+  
+  // Comandos que se ejecutan después de iniciar el contenedor
+  "postStartCommand": "echo '🚀 Codespace listo! Ejecuta: npm run develop'",
+
+  // Configuración de VS Code
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "esbenp.prettier-vscode",
+        "bradlc.vscode-tailwindcss",
+        "dsznajder.es7-react-js-snippets",
+        "formulahendry.auto-rename-tag",
+        "dbaeumer.vscode-eslint",
+        "GraphQL.vscode-graphql",
+        "GraphQL.vscode-graphql-syntax"
+      ],
+      "settings": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "emmet.includeLanguages": {
+          "javascript": "javascriptreact"
+        },
+        "emmet.excludeLanguages": ["markdown"],
+        "terminal.integrated.defaultProfile.linux": "bash"
+      }
+    }
+  },
+
+  // Variables de entorno
+  "containerEnv": {
+    "GATSBY_TELEMETRY_DISABLED": "1"
+  },
+
+  // Ejecutar como usuario no-root
+  "remoteUser": "node"
+}

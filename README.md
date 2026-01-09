@@ -8,12 +8,42 @@
   Gatsby's Millers Portfolio 
 </h1>
 
-Este proyecto se inicio mediante Gatsby hello-world starter 
-Kick off your project with this hello-world boilerplate. This starter ships with the main Gatsby configuration files you might need to get up and running blazing fast with the blazing fast app generator for React.
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/Macorreag/macorreag.github.io?quickstart=1)
+
+Este proyecto es el portafolio personal de Miller Correa, construido con Gatsby y desplegado en GitHub Pages.
 
 _Have another more specific idea? You may want to check out our vibrant collection of [official and community-created starters](https://www.gatsbyjs.com/docs/gatsby-starters/)._
 
-## 🚀 Quick start
+## 🖥️ Desarrollo con GitHub Codespaces
+
+La forma más rápida de comenzar a desarrollar es usando **GitHub Codespaces**:
+
+1. **Abre en Codespaces**: Haz clic en el botón "Open in GitHub Codespaces" arriba o ve a la pestaña "Code" > "Codespaces" > "Create codespace on master"
+
+2. **Espera la configuración**: El Codespace instalará automáticamente todas las dependencias
+
+3. **Inicia el servidor de desarrollo**:
+   ```bash
+   npm run develop
+   ```
+   O usa el atajo `Ctrl+Shift+B` para ejecutar la tarea de desarrollo
+
+4. **Abre el sitio**: Gatsby estará disponible en el puerto `8000`. VS Code te ofrecerá abrir el navegador automáticamente
+
+### 📋 Tareas disponibles en VS Code
+
+Usa `Ctrl+Shift+P` > "Tasks: Run Task" para ejecutar:
+
+| Tarea | Descripción |
+|-------|-------------|
+| 🚀 Gatsby Develop | Inicia el servidor de desarrollo (hot reload) |
+| 📦 Gatsby Build | Genera la versión de producción |
+| 🌐 Gatsby Serve | Sirve la versión de producción en puerto 9000 |
+| 🧹 Gatsby Clean | Limpia la caché de Gatsby |
+| 🚢 Deploy to GitHub Pages | Despliega a GitHub Pages |
+| ✨ Format Code | Formatea el código con Prettier |
+
+## 🚀 Quick start (Local)
 
 1.  **Create a Gatsby site.**
 
