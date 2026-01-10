@@ -15,6 +15,11 @@
         "reveal": "always",
         "panel": "new"
       },
+      "options": {
+        "env": {
+          "NODE_OPTIONS": ""
+        }
+      },
       "detail": "Inicia el servidor de desarrollo de Gatsby"
     },
     {

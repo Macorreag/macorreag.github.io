@@ -23,9 +23,11 @@ La forma más rápida de comenzar a desarrollar es usando **GitHub Codespaces**:
 2. **Espera la configuración**: El Codespace instalará automáticamente todas las dependencias
 
 3. **Inicia el servidor de desarrollo**:
+
    ```bash
    npm run develop
    ```
+
    O usa el atajo `Ctrl+Shift+B` para ejecutar la tarea de desarrollo
 
 4. **Abre el sitio**: Gatsby estará disponible en el puerto `8000`. VS Code te ofrecerá abrir el navegador automáticamente
@@ -34,14 +36,14 @@ La forma más rápida de comenzar a desarrollar es usando **GitHub Codespaces**:
 
 Usa `Ctrl+Shift+P` > "Tasks: Run Task" para ejecutar:
 
-| Tarea | Descripción |
-|-------|-------------|
-| 🚀 Gatsby Develop | Inicia el servidor de desarrollo (hot reload) |
-| 📦 Gatsby Build | Genera la versión de producción |
-| 🌐 Gatsby Serve | Sirve la versión de producción en puerto 9000 |
-| 🧹 Gatsby Clean | Limpia la caché de Gatsby |
-| 🚢 Deploy to GitHub Pages | Despliega a GitHub Pages |
-| ✨ Format Code | Formatea el código con Prettier |
+| Tarea                     | Descripción                                   |
+| ------------------------- | --------------------------------------------- |
+| 🚀 Gatsby Develop         | Inicia el servidor de desarrollo (hot reload) |
+| 📦 Gatsby Build           | Genera la versión de producción               |
+| 🌐 Gatsby Serve           | Sirve la versión de producción en puerto 9000 |
+| 🧹 Gatsby Clean           | Limpia la caché de Gatsby                     |
+| 🚢 Deploy to GitHub Pages | Despliega a GitHub Pages                      |
+| ✨ Format Code            | Formatea el código con Prettier               |
 
 ## 🚀 Quick start (Local)
 
@@ -128,15 +130,19 @@ Looking for more guidance? Full documentation for Gatsby lives [on the website](
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/import/project?template=https://github.com/gatsbyjs/gatsby-starter-hello-world)
 
 ### Deploy To GH-pages
-Esta aplicación tiene un plugin instalado que despliega los cambios de la rama gh-pages en macorreag.github.io por lo tanto si desea sincronizar algun cambio de 
+
+Esta aplicación tiene un plugin instalado que despliega los cambios de la rama gh-pages en macorreag.github.io por lo tanto si desea sincronizar algun cambio de
 la rama master con esta solamente debe ejecutar
+
 ```sh
   $ git checkout gh-pages // go to the gh-pages branch
   $ git rebase master // bring gh-pages up to date with master
   $ git push origin gh-pages // commit the changes
   $ git checkout master // return to the master branch
 ```
+
 Si recibe el error de historias no relacionadas al actualizar la rama gh-pages puede usar
+
 ```sh
   git pull --allow-unrelated-histories origin gh-pages
 ```

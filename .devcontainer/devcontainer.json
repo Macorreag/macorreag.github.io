@@ -1,7 +1,7 @@
 {
   "name": "Gatsby Portfolio - macorreag.github.io",
   "image": "mcr.microsoft.com/devcontainers/javascript-node:16",
-  
+
   // Configurar las características del contenedor
   "features": {
     "ghcr.io/devcontainers/features/github-cli:1": {}
@@ -22,7 +22,7 @@
 
   // Comandos que se ejecutan después de crear el contenedor
   "postCreateCommand": "npm install",
-  
+
   // Comandos que se ejecutan después de iniciar el contenedor
   "postStartCommand": "echo '🚀 Codespace listo! Ejecuta: npm run develop'",
 
