@@ -5,6 +5,9 @@ on:
   push:
     branches:
       - master
+  schedule:
+    # Sincroniza diariamente a las 6:00 UTC
+    - cron: '0 6 * * *'
   workflow_dispatch:
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
@@ -33,6 +36,12 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Sync Notion Database
+        run: npm run sync:notion
+        env:
+          NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
+          NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
 
       - name: Build Gatsby site
         run: npm run build

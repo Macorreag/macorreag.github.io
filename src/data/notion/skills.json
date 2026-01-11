@@ -1,0 +1,29 @@
+[
+  {
+    "id": "placeholder-1",
+    "title": "JavaScript Avanzado",
+    "description": "Desarrollo de aplicaciones modernas con ES6+, async/await, y patrones de diseño.",
+    "skills": ["JavaScript", "Node.js", "Frontend"],
+    "experience": 5,
+    "date": "2020-01-15",
+    "version": 1
+  },
+  {
+    "id": "placeholder-2",
+    "title": "React & Gatsby",
+    "description": "Construcción de sitios estáticos y SPAs con React y el ecosistema Gatsby.",
+    "skills": ["React", "Gatsby", "GraphQL"],
+    "experience": 3,
+    "date": "2021-06-01",
+    "version": 2
+  },
+  {
+    "id": "placeholder-3",
+    "title": "DevOps & CI/CD",
+    "description": "Automatización de pipelines con GitHub Actions, Docker y despliegues continuos.",
+    "skills": ["GitHub Actions", "Docker", "DevOps"],
+    "experience": 2,
+    "date": "2022-03-10",
+    "version": 1
+  }
+]
