@@ -22,10 +22,7 @@ async function fetchNotionDatabase(startCursor = undefined) {
     body: JSON.stringify({
       start_cursor: startCursor,
       page_size: 100,
-      filter: {
-        property: 'Published',
-        checkbox: { equals: true }
-      }
+      // Sin filtro - trae todos los registros
     }),
   });
 
