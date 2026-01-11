@@ -30,7 +30,6 @@ const Skills = () => {
           description
           skills
           experience
-          date
         }
       }
     }
