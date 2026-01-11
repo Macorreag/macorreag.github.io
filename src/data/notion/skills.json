@@ -3,7 +3,7 @@
     "id": "placeholder-1",
     "title": "JavaScript Avanzado",
     "description": "Desarrollo de aplicaciones modernas con ES6+, async/await, y patrones de diseño.",
-    "skills": ["JavaScript", "Node.js", "Frontend"],
+    "skills": ["JavaScript", "Node.js", "Frontend", "TypeScript"],
     "experience": 5,
     "date": "2020-01-15",
     "version": 1
@@ -12,7 +12,7 @@
     "id": "placeholder-2",
     "title": "React & Gatsby",
     "description": "Construcción de sitios estáticos y SPAs con React y el ecosistema Gatsby.",
-    "skills": ["React", "Gatsby", "GraphQL"],
+    "skills": ["React", "Gatsby", "GraphQL", "Redux"],
     "experience": 3,
     "date": "2021-06-01",
     "version": 2
@@ -21,9 +21,72 @@
     "id": "placeholder-3",
     "title": "DevOps & CI/CD",
     "description": "Automatización de pipelines con GitHub Actions, Docker y despliegues continuos.",
-    "skills": ["GitHub Actions", "Docker", "DevOps"],
+    "skills": ["GitHub Actions", "Docker", "DevOps", "Kubernetes"],
     "experience": 2,
     "date": "2022-03-10",
+    "version": 1
+  },
+  {
+    "id": "placeholder-4",
+    "title": "Python & Data Science",
+    "description": "Análisis de datos, machine learning y automatización con Python.",
+    "skills": ["Python", "Pandas", "NumPy", "Scikit-learn"],
+    "experience": 4,
+    "date": "2019-08-20",
+    "version": 1
+  },
+  {
+    "id": "placeholder-5",
+    "title": "Cloud Computing",
+    "description": "Arquitectura y despliegue de aplicaciones en la nube.",
+    "skills": ["AWS", "Azure", "GCP", "Terraform"],
+    "experience": 3,
+    "date": "2021-02-15",
+    "version": 1
+  },
+  {
+    "id": "placeholder-6",
+    "title": "Bases de Datos",
+    "description": "Diseño, optimización y administración de bases de datos SQL y NoSQL.",
+    "skills": ["PostgreSQL", "MongoDB", "Redis", "MySQL"],
+    "experience": 4,
+    "date": "2020-05-10",
+    "version": 1
+  },
+  {
+    "id": "placeholder-7",
+    "title": "Inteligencia Artificial",
+    "description": "Desarrollo de soluciones con modelos de lenguaje y APIs de IA.",
+    "skills": ["OpenAI API", "LangChain", "Hugging Face", "PyTorch"],
+    "experience": 2,
+    "date": "2023-01-05",
+    "version": 1
+  },
+  {
+    "id": "placeholder-8",
+    "title": "Mobile Development",
+    "description": "Desarrollo de aplicaciones móviles multiplataforma.",
+    "skills": ["React Native", "Flutter", "iOS", "Android"],
+    "experience": 2,
+    "date": "2022-07-20",
+    "version": 1
+  },
+  {
+    "id": "placeholder-9",
+    "title": "UI/UX Design",
+    "description": "Diseño de interfaces y experiencia de usuario.",
+    "skills": ["Figma", "Adobe XD", "CSS3", "TailwindCSS"],
+    "experience": 3,
+    "date": "2021-04-12",
+    "version": 1
+  },
+  {
+    "id": "placeholder-10",
+    "title": "Cybersecurity",
+    "description": "Seguridad informática, pentesting y protección de sistemas.",
+    "skills": ["OWASP", "Penetration Testing", "Security Audits", "Encryption"],
+    "experience": 2,
+    "date": "2022-11-30",
     "version": 1
   }
 ]
