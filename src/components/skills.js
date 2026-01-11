@@ -114,7 +114,7 @@ const Skills = () => {
                 <span className="text-[10px] text-teal/60 font-normal">↕ scroll</span>
               </h3>
             </div>
-            <div 
+            <div
               className="overflow-y-auto skills-terminal-scrollbar p-4 md:p-6 space-y-5"
               style={{ height: '200px', maxHeight: '200px' }}
             >
@@ -132,7 +132,7 @@ const Skills = () => {
                 <span className="text-[10px] text-primary/60 font-normal">↕ scroll</span>
               </h3>
             </div>
-            <div 
+            <div
               className="overflow-y-auto skills-terminal-scrollbar p-4 md:p-6 space-y-5 bg-black/10"
               style={{ height: '200px', maxHeight: '200px' }}
             >
