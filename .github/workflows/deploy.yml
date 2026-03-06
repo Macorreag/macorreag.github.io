@@ -43,6 +43,12 @@ jobs:
           NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
           NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
 
+      - name: Sync Notion Experience Database
+        run: npm run sync:experience
+        env:
+          NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
+          NOTION_EXPERIENCE_DATABASE_ID: ${{ secrets.NOTION_EXPERIENCE_DATABASE_ID }}
+
       - name: Build Gatsby site
         run: npm run build
         env:

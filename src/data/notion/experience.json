@@ -1,0 +1,18 @@
+[
+  {
+    "id": "exp-placeholder-1",
+    "nombre": "Senior Developer",
+    "compania": "Bancolombia",
+    "fechaInicio": "2026-03-11",
+    "fechaFin": "2026-03-25",
+    "descripcion": "Desarrollo de apps bancarias de alto impacto, enfocado en arquitectura de microservicios y experiencia de usuario para millones de clientes."
+  },
+  {
+    "id": "exp-placeholder-2",
+    "nombre": "Senior Developer",
+    "compania": "Mercadolibre",
+    "fechaInicio": "2024-01-01",
+    "fechaFin": null,
+    "descripcion": "Desarrollo e integración de plataformas de e-commerce a gran escala, liderando equipos distribuidos y optimizando pipelines de entrega continua."
+  }
+]

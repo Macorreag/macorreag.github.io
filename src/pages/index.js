@@ -6,6 +6,7 @@ import Codigofacilito from '../components/codigofacilito';
 import Medium from '../components/medium';
 import EdNav from '../components/education-nav';
 import Skills from '../components/skills';
+import Experience from '../components/experience';
 
 
 export default () => (
@@ -13,6 +14,7 @@ export default () => (
     <Header></Header>
     <EdNav></EdNav>
     <Skills></Skills>
+    <Experience></Experience>
     <Repos></Repos>
     <Codigofacilito />
     <Medium></Medium>

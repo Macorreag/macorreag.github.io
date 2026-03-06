@@ -13,7 +13,8 @@
     "clean": "gatsby clean",
     "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing\" && exit 1",
     "deploy": "gatsby build --prefix-paths && gh-pages -d public",
-    "sync:notion": "node scripts/sync-notion.js"
+    "sync:notion": "node scripts/sync-notion.js",
+    "sync:experience": "node scripts/sync-notion-experience.js"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.1.1",
