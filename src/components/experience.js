@@ -63,14 +63,14 @@ const ExperienceItem = ({ item, index, isOpen, onToggle }) => {
               <div className="w-2.5 h-2.5 rounded-full bg-teal/80" />
               <div className="w-2.5 h-2.5 rounded-full bg-white/20" />
             </div>
-            <span className="text-xs text-white/30 font-bold font-mono uppercase tracking-widest hidden sm:block">
+            <span className="text-xs font-bold font-mono uppercase tracking-widest hidden sm:block" style={{ color: 'rgba(0, 245, 255, 0.5)' }}>
               Node_Identity: {nodeId}
             </span>
           </div>
 
           {/* Toggle button / summary row */}
           <button
-            className="w-full text-left p-4 md:p-6 focus:outline-none group/btn"
+            className="w-full text-left p-4 md:p-6 focus:outline-none group/btn text-white"
             onClick={onToggle}
             aria-expanded={isOpen}
           >
@@ -116,7 +116,7 @@ const ExperienceItem = ({ item, index, isOpen, onToggle }) => {
                 >
                   &gt;
                 </span>
-                <p className="text-slate-300 text-sm leading-relaxed pl-3">
+                <p className="text-sm leading-relaxed pl-3" style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
                   {item.descripcion || 'Sin descripción disponible.'}
                 </p>
               </div>
@@ -125,11 +125,11 @@ const ExperienceItem = ({ item, index, isOpen, onToggle }) => {
                 className={`mt-6 p-4 bg-black/40 border-l-2 space-y-2 text-xs font-mono ${isCoral ? 'border-primary/40' : 'border-teal/40'}`}
               >
                 <div className="flex justify-between">
-                  <span className="text-white/30 uppercase tracking-widest">Compañía:</span>
-                  <span className="text-slate-400 uppercase">{item.compania || '—'}</span>
+                  <span className="uppercase tracking-widest" style={{ color: 'rgba(255, 255, 255, 0.3)' }}>Compañía:</span>
+                  <span className="uppercase" style={{ color: 'rgba(255, 255, 255, 0.6)' }}>{item.compania || '—'}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-white/30 uppercase tracking-widest">Estado:</span>
+                  <span className="uppercase tracking-widest" style={{ color: 'rgba(255, 255, 255, 0.3)' }}>Estado:</span>
                   <span className={isCoral ? 'text-primary' : 'text-teal'}>
                     {item.fechaFin ? 'Finalizado' : 'Activo'}
                   </span>
@@ -160,10 +160,18 @@ const Experience = () => {
   `);
 
   const experiences = data.allExperienceJson.nodes;
-  const [openIndex, setOpenIndex] = useState(null);
+  const [openIndices, setOpenIndices] = useState(new Set([0]));
 
   const handleToggle = (index) => {
-    setOpenIndex(openIndex === index ? null : index);
+    setOpenIndices(prev => {
+      const next = new Set(prev);
+      if (next.has(index)) {
+        next.delete(index);
+      } else {
+        next.add(index);
+      }
+      return next;
+    });
   };
 
   return (
@@ -219,7 +227,7 @@ const Experience = () => {
                 key={item.id}
                 item={item}
                 index={index}
-                isOpen={openIndex === index}
+                isOpen={openIndices.has(index)}
                 onToggle={() => handleToggle(index)}
               />
             ))}
