@@ -10,7 +10,7 @@ import Experience from '../components/experience';
 
 
 export default () => (
-  <div>
+  <div style={{ backgroundColor: '#0d0d14', minHeight: '100vh' }} className="pb-16">
     <Header></Header>
     <EdNav></EdNav>
     <Skills></Skills>

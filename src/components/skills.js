@@ -1,5 +1,7 @@
 import React from 'react';
 import { useStaticQuery, graphql } from 'gatsby';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMicrochip, faDatabase } from '@fortawesome/free-solid-svg-icons';
 
 // Componente para la barra de progreso de una habilidad
 const SkillProgressBar = ({ skill, index }) => {
@@ -94,7 +96,8 @@ const Skills = () => {
         <div className="relative z-20 border-b border-white/10 p-4 md:p-6 flex flex-col md:flex-row justify-between items-baseline gap-4 bg-black/20">
           <div>
             <h2 className="font-display text-xl md:text-2xl font-bold tracking-[0.2em] text-white flex items-center gap-3">
-              <span className="text-primary animate-pulse">::</span> SKILLS_MANIFEST
+              <FontAwesomeIcon icon={faMicrochip} className="text-primary animate-pulse" size="sm" />
+              SKILLS_MANIFEST
             </h2>
             <div className="h-0.5 w-24 bg-primary mt-1" />
           </div>
@@ -110,7 +113,10 @@ const Skills = () => {
           <div className="border-b lg:border-b-0 lg:border-r border-white/10">
             <div className="p-4 md:p-6 border-b border-teal/20 bg-teal/5">
               <h3 className="font-display text-sm tracking-[0.2em] text-teal uppercase font-bold flex items-center justify-between">
-                <span>01_Core_Competencies</span>
+                <span className="flex items-center gap-2">
+                  <FontAwesomeIcon icon={faMicrochip} size="xs" />
+                  01_Core_Competencies
+                </span>
                 <span className="text-[10px] text-teal/60 font-normal">↕ scroll</span>
               </h3>
             </div>
@@ -128,7 +134,10 @@ const Skills = () => {
           <div>
             <div className="p-4 md:p-6 border-b border-primary/20 bg-primary/5">
               <h3 className="font-display text-sm tracking-[0.2em] text-primary uppercase font-bold flex items-center justify-between">
-                <span>02_Data_Modules</span>
+                <span className="flex items-center gap-2">
+                  <FontAwesomeIcon icon={faDatabase} size="xs" />
+                  02_Data_Modules
+                </span>
                 <span className="text-[10px] text-primary/60 font-normal">↕ scroll</span>
               </h3>
             </div>
