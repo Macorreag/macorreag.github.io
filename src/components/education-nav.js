@@ -1,5 +1,7 @@
 import React from 'react';
 import { useStaticQuery, graphql, Link } from 'gatsby';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faGraduationCap, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 
 export default props => {
   const data = useStaticQuery(graphql`
@@ -28,7 +30,8 @@ export default props => {
         <div className="relative z-20 border-b border-white/10 p-4 md:p-6 flex flex-col md:flex-row justify-between items-baseline gap-4 bg-black/20">
           <div>
             <h2 className="font-display text-xl md:text-2xl font-bold tracking-widest text-white flex items-center gap-3 uppercase">
-              <span className="text-primary animate-pulse">::</span> FORMATION
+              <FontAwesomeIcon icon={faGraduationCap} className="text-primary animate-pulse" size="sm" />
+              FORMATION
               <span className="text-teal">.path</span>
             </h2>
             <div className="h-0.5 w-24 bg-primary mt-1" />
@@ -50,8 +53,8 @@ export default props => {
                   key={node.slug}
                   className="flex flex-col justify-between p-4 border transition-colors"
                   style={{
-                    borderColor: isCoral ? 'rgba(255,111,97,0.25)' : 'rgba(0,245,255,0.25)',
-                    backgroundColor: isCoral ? 'rgba(255,111,97,0.03)' : 'rgba(0,245,255,0.03)',
+                    borderColor: isCoral ? 'rgba(255,102,0,0.25)' : 'rgba(0,245,255,0.25)',
+                    backgroundColor: isCoral ? 'rgba(255,102,0,0.03)' : 'rgba(0,245,255,0.03)',
                   }}
                 >
                   <div>
@@ -63,9 +66,10 @@ export default props => {
                   <div className="mt-4">
                     <Link
                       to={`/${node.slug}`}
-                      className={`text-xs font-mono font-bold uppercase tracking-widest hover:opacity-80 transition-opacity ${isCoral ? 'text-primary' : 'text-teal'}`}
+                      className={`text-xs font-mono font-bold uppercase tracking-widest hover:opacity-80 transition-opacity flex items-center gap-2 ${isCoral ? 'text-primary' : 'text-teal'}`}
                     >
-                      [ Ir → ]
+                      <FontAwesomeIcon icon={faArrowRight} size="xs" />
+                      Ir
                     </Link>
                   </div>
                 </article>

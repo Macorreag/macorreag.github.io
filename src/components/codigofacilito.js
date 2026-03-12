@@ -1,5 +1,7 @@
 import React from 'react';
 import { useStaticQuery, graphql } from 'gatsby';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBookOpen, faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
 
 export default () => {
   const data = useStaticQuery(graphql`
@@ -31,7 +33,8 @@ export default () => {
         <div className="relative z-20 border-b border-white/10 p-4 md:p-6 flex flex-col md:flex-row justify-between items-baseline gap-4 bg-black/20">
           <div>
             <h2 className="font-display text-xl md:text-2xl font-bold tracking-widest text-white flex items-center gap-3 uppercase">
-              <span className="text-primary animate-pulse">::</span> CODIGOFACILITO
+              <FontAwesomeIcon icon={faBookOpen} className="text-primary animate-pulse" size="sm" />
+              CODIGOFACILITO
               <span className="text-teal">.cursos</span>
             </h2>
             <div className="h-0.5 w-24 bg-primary mt-1" />
@@ -53,8 +56,8 @@ export default () => {
                   key={course.url || course.title || index}
                   className="p-4 border flex flex-col gap-3"
                   style={{
-                    borderColor: isCoral ? 'rgba(255,111,97,0.25)' : 'rgba(0,245,255,0.25)',
-                    backgroundColor: isCoral ? 'rgba(255,111,97,0.03)' : 'rgba(0,245,255,0.03)',
+                    borderColor: isCoral ? 'rgba(255,102,0,0.25)' : 'rgba(0,245,255,0.25)',
+                    backgroundColor: isCoral ? 'rgba(255,102,0,0.03)' : 'rgba(0,245,255,0.03)',
                   }}
                 >
                   <h4 className={`font-bold font-mono text-sm ${isCoral ? 'text-primary' : 'text-teal'}`}>
@@ -77,9 +80,10 @@ export default () => {
                       href={course.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className={`text-xs font-mono font-bold uppercase tracking-widest hover:opacity-80 transition-opacity ${isCoral ? 'text-primary' : 'text-teal'}`}
+                      className={`text-xs font-mono font-bold uppercase tracking-widest hover:opacity-80 transition-opacity flex items-center gap-2 ${isCoral ? 'text-primary' : 'text-teal'}`}
                     >
-                      [ Ver_Curso → ]
+                      <FontAwesomeIcon icon={faArrowUpRightFromSquare} size="xs" />
+                      Ver_Curso
                     </a>
                   )}
                 </div>

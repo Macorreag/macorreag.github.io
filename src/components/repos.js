@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCode, faCircleDot } from '@fortawesome/free-solid-svg-icons';
+import { faGithub } from '@fortawesome/free-brands-svg-icons';
 import Repo from './repo';
 
 export default () => {
@@ -37,7 +40,8 @@ export default () => {
         <div className="relative z-20 border-b border-white/10 p-4 md:p-6 flex flex-col md:flex-row justify-between items-baseline gap-4 bg-black/20">
           <div>
             <h2 className="font-display text-xl md:text-2xl font-bold tracking-widest text-white flex items-center gap-3 uppercase">
-              <span className="text-primary animate-pulse">::</span> OPEN_SOURCE
+              <FontAwesomeIcon icon={faCode} className="text-primary animate-pulse" size="sm" />
+              OPEN_SOURCE
               <span className="text-teal">.repos</span>
             </h2>
             <div className="h-0.5 w-24 bg-teal mt-1" />
@@ -52,7 +56,7 @@ export default () => {
         {/* Status bar */}
         <div className="relative z-20 border-b border-white/10 px-4 md:px-6 py-3 bg-black/10 flex flex-wrap items-center gap-6">
           <div className="flex items-center gap-2">
-            <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+            <FontAwesomeIcon icon={faCircleDot} className="text-green-500 animate-pulse" size="xs" />
             <span className="text-xs text-green-500 uppercase font-bold tracking-widest">
               API_Connected
             </span>
@@ -81,9 +85,10 @@ export default () => {
             href="https://github.com/macorreag"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-xs font-mono font-bold text-primary hover:text-white transition-colors tracking-widest uppercase"
+            className="text-xs font-mono font-bold text-primary hover:text-white transition-colors tracking-widest uppercase flex items-center gap-2"
           >
-            [ github.com/macorreag → ]
+            <FontAwesomeIcon icon={faGithub} size="sm" />
+            github.com/macorreag
           </a>
         </div>
 

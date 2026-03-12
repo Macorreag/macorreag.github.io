@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useStaticQuery, graphql } from 'gatsby';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBriefcase, faBolt, faLocationDot, faChevronDown } from '@fortawesome/free-solid-svg-icons';
 
 const formatDate = (dateStr) => {
   if (!dateStr) return 'Presente';
@@ -12,8 +14,8 @@ const ExperienceItem = ({ item, index, isOpen, onToggle }) => {
   const accentColor = isCoral ? 'primary' : 'teal';
   const glowStyle = isCoral
     ? {
-        border: '1px solid rgba(255, 111, 97, 0.3)',
-        boxShadow: '0 0 15px rgba(255, 111, 97, 0.1), inset 0 0 10px rgba(255, 111, 97, 0.05)',
+        border: '1px solid rgba(255, 102, 0, 0.3)',
+        boxShadow: '0 0 15px rgba(255, 102, 0, 0.1), inset 0 0 10px rgba(255, 102, 0, 0.05)',
       }
     : {
         border: '1px solid rgba(0, 245, 255, 0.3)',
@@ -34,9 +36,9 @@ const ExperienceItem = ({ item, index, isOpen, onToggle }) => {
           style={{
             width: '12px',
             height: '12px',
-            background: isCoral ? '#FF6F61' : '#00F5FF',
+            background: isCoral ? '#FF6600' : '#00F5FF',
             border: '1px solid rgba(255,255,255,0.5)',
-            boxShadow: isCoral ? '0 0 15px #FF6F61' : '0 0 15px #00F5FF',
+            boxShadow: isCoral ? '0 0 15px #FF6600' : '0 0 15px #00F5FF',
           }}
         />
         <span
@@ -97,12 +99,11 @@ const ExperienceItem = ({ item, index, isOpen, onToggle }) => {
                   </span>
                 </div>
                 {/* Expand/collapse icon */}
-                <span
-                  className={`font-mono text-sm font-bold transition-transform duration-300 ${isOpen ? 'rotate-180' : ''} ${isCoral ? 'text-primary' : 'text-teal'}`}
+                <FontAwesomeIcon
+                  icon={faChevronDown}
+                  className={`text-sm font-bold transition-transform duration-300 ${isOpen ? 'rotate-180' : ''} ${isCoral ? 'text-primary' : 'text-teal'}`}
                   style={{ display: 'inline-block' }}
-                >
-                  ▾
-                </span>
+                />
               </div>
             </div>
           </button>
@@ -111,11 +112,10 @@ const ExperienceItem = ({ item, index, isOpen, onToggle }) => {
           {isOpen && (
             <div className="px-4 md:px-6 pb-6 border-t border-white/10">
               <div className="mt-6 relative">
-                <span
+                <FontAwesomeIcon
+                  icon={faBolt}
                   className={`text-xs absolute -left-2 top-0 italic font-bold opacity-40 ${isCoral ? 'text-primary' : 'text-teal'}`}
-                >
-                  &gt;
-                </span>
+                />
                 <p className="text-sm leading-relaxed pl-3" style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
                   {item.descripcion || 'Sin descripción disponible.'}
                 </p>
@@ -185,7 +185,8 @@ const Experience = () => {
         <div className="relative z-20 border-b border-white/10 p-4 md:p-6 flex flex-col md:flex-row justify-between items-baseline gap-4 bg-black/20">
           <div>
             <h2 className="font-display text-xl md:text-2xl font-bold tracking-widest text-white flex items-center gap-3 uppercase">
-              <span className="text-primary animate-pulse">::</span> EXEC_PATH
+              <FontAwesomeIcon icon={faBriefcase} className="text-primary animate-pulse" size="sm" />
+              EXEC_PATH
               <span className="text-teal">.history</span>
             </h2>
             <div className="h-0.5 w-24 bg-primary mt-1" />
@@ -217,7 +218,7 @@ const Experience = () => {
             className="absolute left-[55px] md:left-[71px] top-4 bottom-4 w-px opacity-30 pointer-events-none"
             style={{
               background:
-                'linear-gradient(to bottom, transparent, #FF6F61 15%, #00F5FF 50%, #FF6F61 85%, transparent)',
+                'linear-gradient(to bottom, transparent, #FF6600 15%, #00F5FF 50%, #FF6600 85%, transparent)',
             }}
           />
 

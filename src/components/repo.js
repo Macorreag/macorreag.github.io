@@ -1,4 +1,6 @@
 import React from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
 
 export default props => (
   <li
@@ -12,8 +14,9 @@ export default props => (
         target="_blank"
         rel="noopener noreferrer"
         className="text-xs font-mono text-teal/60 hover:text-teal transition-colors whitespace-nowrap shrink-0"
+        aria-label={`Open ${props.repo.name} on GitHub`}
       >
-        [→]
+        <FontAwesomeIcon icon={faArrowUpRightFromSquare} size="xs" />
       </a>
     </div>
     <p className="text-xs text-white/40 font-mono leading-relaxed line-clamp-2">

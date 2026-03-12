@@ -1,4 +1,7 @@
 import React from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTerminal, faLocationDot, faCircleInfo } from '@fortawesome/free-solid-svg-icons';
+import { faGithub } from '@fortawesome/free-brands-svg-icons';
 import Form from './contact.form';
 
 const GITHUB_AVATAR = 'https://github.com/macorreag.png';
@@ -28,9 +31,10 @@ export default () => (
             <div className="w-2.5 h-2.5 rounded-full bg-white/20" />
           </div>
           <span
-            className="text-xs font-bold font-mono uppercase tracking-widest hidden sm:block"
+            className="text-xs font-bold font-mono uppercase tracking-widest hidden sm:flex items-center gap-2"
             style={{ color: 'rgba(0, 245, 255, 0.5)' }}
           >
+            <FontAwesomeIcon icon={faTerminal} size="xs" />
             macorreag@portfolio:~$ whoami
           </span>
         </div>
@@ -43,8 +47,8 @@ export default () => (
               <div
                 className="w-28 h-28 md:w-32 md:h-32 rounded-full overflow-hidden"
                 style={{
-                  border: '2px solid rgba(255, 111, 97, 0.5)',
-                  boxShadow: '0 0 20px rgba(255, 111, 97, 0.2)',
+                  border: '2px solid rgba(255, 102, 0, 0.5)',
+                  boxShadow: '0 0 20px rgba(255, 102, 0, 0.2)',
                 }}
               >
                 <img
@@ -69,6 +73,7 @@ export default () => (
               Miller Correa
             </h1>
             <p className="text-primary font-mono text-xs md:text-sm tracking-widest uppercase mb-4 font-bold">
+              <FontAwesomeIcon icon={faCircleInfo} size="xs" className="mr-1" />
               {'// FULL_STACK_DEVELOPER & AI_ENGINEER'}
             </p>
             <p className="text-white/60 text-sm leading-relaxed font-mono mb-6 max-w-lg">
@@ -82,14 +87,14 @@ export default () => (
                 href="https://github.com/macorreag"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1 text-white/40 hover:text-teal transition-colors"
+                className="flex items-center gap-2 text-white/40 hover:text-teal transition-colors"
               >
-                <span className="text-teal">{'{ '}</span>
+                <FontAwesomeIcon icon={faGithub} className="text-teal" />
                 github.com/macorreag
-                <span className="text-teal">{' }'}</span>
               </a>
-              <span className="flex items-center gap-1 text-white/40">
-                <span className="text-primary">#</span> Colombia, CO
+              <span className="flex items-center gap-2 text-white/40">
+                <FontAwesomeIcon icon={faLocationDot} className="text-primary" />
+                Colombia, CO
               </span>
             </div>
 

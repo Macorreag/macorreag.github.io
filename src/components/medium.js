@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faNewspaper, faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
 import Post from './post';
 
 export default () => {
@@ -36,7 +38,8 @@ export default () => {
         <div className="relative z-20 border-b border-white/10 p-4 md:p-6 flex flex-col md:flex-row justify-between items-baseline gap-4 bg-black/20">
           <div>
             <h2 className="font-display text-xl md:text-2xl font-bold tracking-widest text-white flex items-center gap-3 uppercase">
-              <span className="text-primary animate-pulse">::</span> MEDIUM
+              <FontAwesomeIcon icon={faNewspaper} className="text-primary animate-pulse" size="sm" />
+              MEDIUM
               <span className="text-teal">.posts</span>
             </h2>
             <div className="h-0.5 w-24 bg-teal mt-1" />
@@ -67,16 +70,17 @@ export default () => {
         {/* Footer */}
         <div className="relative z-20 border-t border-white/20 p-3 md:p-4 bg-black/60 flex justify-between items-center">
           <div className="text-xs text-primary font-mono flex items-center gap-3">
-            <span className="w-2 h-2 bg-primary rounded-full animate-pulse shadow-[0_0_8px_#ff6f61]" />
+            <span className="w-2 h-2 bg-primary rounded-full animate-pulse shadow-[0_0_8px_#FF6600]" />
             ACTIVE_SESSION: MEDIUM.LOG
           </div>
           <a
             href="https://medium.com/@macorreag"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-xs font-mono font-bold text-teal hover:text-white transition-colors tracking-widest uppercase"
+            className="text-xs font-mono font-bold text-teal hover:text-white transition-colors tracking-widest uppercase flex items-center gap-2"
           >
-            [ medium.com/@macorreag → ]
+            <FontAwesomeIcon icon={faArrowUpRightFromSquare} size="xs" />
+            medium.com/@macorreag
           </a>
         </div>
 

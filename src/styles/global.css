@@ -6,7 +6,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700&display=swap');
 
 :root {
-  --primary-coral: #ff6f61;
+  --primary-coral: #FF6600;
   --electric-teal: #00f5ff;
   --bg-terminal: #1e1e1e;
 }
@@ -40,8 +40,8 @@ body {
 }
 
 .skills-terminal-scrollbar::-webkit-scrollbar-track {
-  background: rgba(255, 111, 97, 0.05);
-  border-left: 1px solid rgba(255, 111, 97, 0.1);
+  background: rgba(255, 102, 0, 0.05);
+  border-left: 1px solid rgba(255, 102, 0, 0.1);
 }
 
 .skills-terminal-scrollbar::-webkit-scrollbar-thumb {
@@ -50,7 +50,7 @@ body {
 }
 
 .glow-coral {
-  box-shadow: 0 0 12px rgba(255, 111, 97, 0.4);
+  box-shadow: 0 0 12px rgba(255, 102, 0, 0.4);
 }
 
 .glow-teal {
