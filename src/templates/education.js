@@ -45,19 +45,19 @@ export default props => {
                 return (
                   <div
                     key={index}
-                    className="flex flex-col md:flex-row md:items-center md:justify-between p-4 border transition-all hover:shadow-lg"
+                    className="p-4 border transition-all hover:shadow-lg"
                     style={{
                       borderColor: isCoral ? 'rgba(255,102,0,0.3)' : 'rgba(0,245,255,0.3)',
                       backgroundColor: isCoral ? 'rgba(255,102,0,0.05)' : 'rgba(0,245,255,0.05)',
                     }}
                   >
-                    <div className="flex-1 mb-4 md:mb-0">
-                      <div className="flex items-center gap-3 mb-2">
-                        <FontAwesomeIcon
-                          icon={faCheck}
-                          size="xs"
-                          className={isCoral ? 'text-primary' : 'text-teal'}
-                        />
+                    <div className="flex items-start gap-3 mb-3">
+                      <FontAwesomeIcon
+                        icon={faCheck}
+                        size="xs"
+                        className={`mt-1 flex-shrink-0 ${isCoral ? 'text-primary' : 'text-teal'}`}
+                      />
+                      <div className="flex-1">
                         <h3
                           className={`font-bold text-sm md:text-base ${
                             isCoral ? 'text-primary' : 'text-teal'
@@ -65,27 +65,29 @@ export default props => {
                         >
                           {item.name}
                         </h3>
+                        {item.platform && (
+                          <p className="text-xs text-white/60 font-mono mt-1">
+                            Plataforma: <span className="text-white/70">{item.platform}</span>
+                          </p>
+                        )}
                       </div>
-                      {item.platform && (
-                        <p className="text-xs text-white/60 font-mono ml-6">
-                          Platform: <span className="text-white/70">{item.platform}</span>
-                        </p>
-                      )}
                     </div>
                     {item.url && (
-                      <a
-                        href={item.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={`inline-flex items-center gap-2 px-4 py-2 border text-xs font-mono font-bold uppercase tracking-widest transition-all hover:shadow-lg ${
-                          isCoral
-                            ? 'border-primary/50 text-primary hover:bg-primary/10'
-                            : 'border-teal/50 text-teal hover:bg-teal/10'
-                        }`}
-                      >
-                        <FontAwesomeIcon icon={faExternalLinkAlt} size="xs" />
-                        Ver Credencial
-                      </a>
+                      <div className="pl-8">
+                        <a
+                          href={item.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={`inline-flex items-center gap-2 px-4 py-2 border text-xs font-mono font-bold uppercase tracking-widest transition-all hover:shadow-lg ${
+                            isCoral
+                              ? 'border-primary/50 text-primary hover:bg-primary/10'
+                              : 'border-teal/50 text-teal hover:bg-teal/10'
+                          }`}
+                        >
+                          <FontAwesomeIcon icon={faExternalLinkAlt} size="xs" />
+                          Ver Credencial
+                        </a>
+                      </div>
                     )}
                   </div>
                 );
