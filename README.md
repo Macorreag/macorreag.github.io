@@ -45,6 +45,29 @@ Usa `Ctrl+Shift+P` > "Tasks: Run Task" para ejecutar:
 | 🚢 Deploy to GitHub Pages | Despliega a GitHub Pages                      |
 | ✨ Format Code            | Formatea el código con Prettier               |
 
+## Stitch MCP en Codespaces
+
+Este repositorio ya incluye la configuración de MCP para Stitch en:
+
+- `.vscode/mcp.json`
+- `.devcontainer/devcontainer.json`
+
+Con esto, cada vez que arranques un Codespace en este repo, VS Code tendrá disponible el servidor MCP `stitch`.
+
+### Configurar la API key
+
+1. Ve a GitHub: `Settings` > `Codespaces` > `Secrets`.
+2. Crea un secret llamado `STITCH_API_KEY` con tu API key.
+3. Reinicia o recrea tu Codespace para que la variable quede disponible.
+
+### Verificación rápida
+
+En VS Code abre la paleta (`Ctrl+Shift+P`) y ejecuta:
+
+- `MCP: List Servers`
+
+Deberías ver el servidor `stitch` con la configuración del workspace.
+
 ## 🚀 Quick start (Local)
 
 1.  **Create a Gatsby site.**

@@ -29,6 +29,18 @@
   // Configuración de VS Code
   "customizations": {
     "vscode": {
+      "mcp": {
+        "servers": {
+          "stitch": {
+            "type": "stdio",
+            "command": "npx",
+            "args": ["-y", "@_davideast/stitch-mcp", "proxy"],
+            "env": {
+              "STITCH_API_KEY": "${env:STITCH_API_KEY}"
+            }
+          }
+        }
+      },
       "extensions": [
         "esbenp.prettier-vscode",
         "bradlc.vscode-tailwindcss",
@@ -52,7 +64,8 @@
 
   // Variables de entorno
   "containerEnv": {
-    "GATSBY_TELEMETRY_DISABLED": "1"
+    "GATSBY_TELEMETRY_DISABLED": "1",
+    "STITCH_API_KEY": "${localEnv:STITCH_API_KEY}"
   },
 
   // Ejecutar como usuario no-root
