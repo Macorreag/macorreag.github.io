@@ -60,6 +60,8 @@ Con esto, cada vez que arranques un Codespace en este repo, VS Code tendrá disp
 2. Crea un secret llamado `STITCH_API_KEY` con tu API key.
 3. Reinicia o recrea tu Codespace para que la variable quede disponible.
 
+Importante: en `.vscode/mcp.json` debes usar tu API key (o la variable `STITCH_API_KEY`) y ese archivo **no debe subirse al repositorio**.
+
 ### Verificación rápida
 
 En VS Code abre la paleta (`Ctrl+Shift+P`) y ejecuta:
