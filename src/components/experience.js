@@ -1,17 +1,20 @@
 import React, { useState } from 'react';
 import { useStaticQuery, graphql } from 'gatsby';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBriefcase, faBolt, faLocationDot, faChevronDown } from '@fortawesome/free-solid-svg-icons';
+import { faBriefcase, faBolt, faChevronDown } from '@fortawesome/free-solid-svg-icons';
 
 const formatDate = (dateStr) => {
   if (!dateStr) return 'Presente';
   const date = new Date(dateStr + 'T00:00:00');
-  return date.toLocaleDateString('es-CO', { month: '2-digit', year: 'numeric' });
+  return date.toLocaleDateString('es-CO', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+  });
 };
 
 const ExperienceItem = ({ item, index, isOpen, onToggle }) => {
   const isCoral = index % 2 === 0;
-  const accentColor = isCoral ? 'primary' : 'teal';
   const glowStyle = isCoral
     ? {
         border: '1px solid rgba(255, 102, 0, 0.3)',
@@ -175,7 +178,7 @@ const Experience = () => {
   };
 
   return (
-    <div className="w-full max-w-6xl mx-auto mt-12 px-4 font-mono">
+    <section id="experience" className="w-full max-w-6xl mx-auto mt-12 px-4 font-mono">
       {/* Terminal Container */}
       <div className="bg-terminal-bg relative border border-white/10 shadow-2xl overflow-hidden rounded-sm">
         {/* Grid Background */}
@@ -253,7 +256,7 @@ const Experience = () => {
         <div className="absolute bottom-0 left-0 w-4 h-4 md:w-6 md:h-6 border-b-2 border-l-2 border-teal/60 z-30" />
         <div className="absolute bottom-0 right-0 w-4 h-4 md:w-6 md:h-6 border-b-2 border-r-2 border-primary/60 z-30" />
       </div>
-    </div>
+    </section>
   );
 };
 
