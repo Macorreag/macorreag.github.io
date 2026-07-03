@@ -5,6 +5,8 @@ import Post from './post';
 
 export default () => {
   const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     const data = sessionStorage.getItem('posts');
@@ -12,17 +14,28 @@ export default () => {
       const parsed = JSON.parse(data);
       if (parsed && parsed.items) {
         setPosts(parsed.items);
+        setLoading(false);
         return;
       }
     }
 
     async function getMediumPosts() {
-      const response = await fetch(
-        'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fmedium.com%2Ffeed%2F%40macorreag',
-      );
-      const myPosts = await response.json();
-      sessionStorage.setItem('posts', JSON.stringify(myPosts));
-      if (myPosts && myPosts.items) setPosts(myPosts.items);
+      try {
+        const response = await fetch(
+          'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fmedium.com%2Ffeed%2F%40macorreag',
+        );
+        if (!response.ok) {
+          throw new Error(`RSS proxy responded ${response.status}`);
+        }
+
+        const myPosts = await response.json();
+        sessionStorage.setItem('posts', JSON.stringify(myPosts));
+        if (myPosts && myPosts.items) setPosts(myPosts.items);
+      } catch (fetchError) {
+        setError('No se pudieron cargar los artículos de Medium.');
+      } finally {
+        setLoading(false);
+      }
     }
 
     getMediumPosts();
@@ -53,7 +66,17 @@ export default () => {
 
         {/* Posts grid */}
         <div className="relative z-20 p-4 md:p-6">
-          {posts.length > 0 ? (
+          {error ? (
+            <div className="border border-white/10 bg-black/30 px-4 py-5 text-sm font-mono text-white/60">
+              <p className="text-primary font-bold mb-1">Medium temporalmente indisponible</p>
+              <p>{error}</p>
+            </div>
+          ) : loading ? (
+            <p className="text-center text-white/30 font-mono text-sm py-8">
+              <span className="text-primary">{'> '}</span>
+              Fetching posts...
+            </p>
+          ) : posts.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
               {posts.map((post, index) => (
                 <Post key={post.link || post.guid || index} element={post} index={index} />
@@ -62,7 +85,7 @@ export default () => {
           ) : (
             <p className="text-center text-white/30 font-mono text-sm py-8">
               <span className="text-primary">{'> '}</span>
-              Fetching posts...
+              No published posts yet.
             </p>
           )}
         </div>

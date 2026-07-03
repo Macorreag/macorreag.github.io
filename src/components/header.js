@@ -113,26 +113,30 @@ export default () => (
             </div>
 
             <div className="flex flex-wrap gap-4 pt-4">
-              <button
+              <a
                 className="px-8 py-4 text-[#020617] font-bold rounded-sm slate-glow-intense hover:translate-y-[-2px] transition-all flex items-center gap-3 group uppercase text-sm tracking-widest"
                 style={{ backgroundColor: '#00FF41' }}
+                href="https://github.com/Macorreag/macorreag.github.io"
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 Explore Repository
                 <FontAwesomeIcon
                   icon={faArrowRight}
                   className="group-hover:translate-x-1 transition-transform"
                 />
-              </button>
-              <button
+              </a>
+              <a
                 className="px-8 py-4 border font-bold rounded-sm hover:bg-[#00FF41]/10 transition-all uppercase text-sm tracking-widest bg-transparent"
                 style={{
                   borderColor: 'rgba(0, 255, 65, 0.5)',
                   color: '#00FF41',
                   textShadow: '0 0 8px rgba(0, 255, 65, 0.5)',
                 }}
+                href="#experience"
               >
                 Technical Bio
-              </button>
+              </a>
             </div>
 
             <div

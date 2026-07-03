@@ -7,6 +7,8 @@ import Repo from './repo';
 export default () => {
   const [repos, setRepos] = useState([]);
   const [reposCount, setReposCount] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     const data = sessionStorage.getItem('repos');
@@ -15,16 +17,27 @@ export default () => {
       myRepos = JSON.parse(data);
       setReposCount(myRepos.length);
       myRepos = myRepos.slice(1, 13);
+      setLoading(false);
       return setRepos(myRepos);
     }
 
     async function fetchRepos() {
-      const response = await fetch('https://api.github.com/users/macorreag/repos');
-      let myRepos = await response.json();
-      setReposCount(myRepos.length);
-      sessionStorage.setItem('repos', JSON.stringify(myRepos));
-      myRepos = myRepos.slice(1, 13);
-      setRepos(myRepos);
+      try {
+        const response = await fetch('https://api.github.com/users/macorreag/repos');
+        if (!response.ok) {
+          throw new Error(`GitHub API responded ${response.status}`);
+        }
+
+        let myRepos = await response.json();
+        setReposCount(myRepos.length);
+        sessionStorage.setItem('repos', JSON.stringify(myRepos));
+        myRepos = myRepos.slice(1, 13);
+        setRepos(myRepos);
+      } catch (fetchError) {
+        setError('No se pudieron cargar los repositorios en este momento.');
+      } finally {
+        setLoading(false);
+      }
     }
 
     fetchRepos();
@@ -68,11 +81,23 @@ export default () => {
 
         {/* Repos grid */}
         <div className="relative z-20 p-4 md:p-6">
-          <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-            {repos.map(repo => (
-              <Repo repo={repo} key={repo.id} />
-            ))}
-          </ul>
+          {error ? (
+            <div className="border border-white/10 bg-black/30 px-4 py-5 text-sm font-mono text-white/60">
+              <p className="text-primary font-bold mb-1">Repos temporalmente indisponibles</p>
+              <p>{error}</p>
+            </div>
+          ) : loading ? (
+            <p className="text-center text-white/30 font-mono text-sm py-8">
+              <span className="text-primary">{'> '}</span>
+              Loading repositories...
+            </p>
+          ) : (
+            <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+              {repos.map(repo => (
+                <Repo repo={repo} key={repo.id} />
+              ))}
+            </ul>
+          )}
         </div>
 
         {/* Footer */}

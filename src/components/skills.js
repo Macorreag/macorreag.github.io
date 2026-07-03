@@ -6,7 +6,8 @@ import { faMicrochip, faDatabase } from '@fortawesome/free-solid-svg-icons';
 // Componente para la barra de progreso de una habilidad
 const SkillProgressBar = ({ skill, index }) => {
   // Calcular el nivel basado en experiencia (máximo 10)
-  const level = Math.min((skill.experience || 1) * 2, 10);
+  const numericExperience = Number(skill.experience || skill.level || 1);
+  const level = Math.min(numericExperience * 2, 10);
   const percentage = level * 10;
 
   // Alternar colores entre teal y coral
@@ -19,7 +20,7 @@ const SkillProgressBar = ({ skill, index }) => {
     <div className="group">
       <div className="flex justify-between items-end mb-2">
         <label className="text-sm font-bold text-white uppercase tracking-wider font-mono">
-          {skill.title}
+          {skill.title || skill.name || skill.category || 'Skill'}
         </label>
         <span className={`${textColorClass} font-mono text-xs font-semibold`}>
           {level.toFixed(1)} / 10.0
@@ -48,8 +49,13 @@ const SkillTags = ({ skill, colorVariant }) => {
   return (
     <div>
       <div className="text-xs text-white font-bold tracking-[0.15em] mb-3 uppercase border-l-2 border-primary pl-3 font-mono">
-        {skill.title.replace(/\s+/g, '_')}
+        {(skill.title || skill.name || skill.category || 'Skill').replace(/\s+/g, '_')}
       </div>
+      {skill.description ? (
+        <p className="mb-3 text-xs leading-relaxed text-white/45 font-mono max-w-md">
+          {skill.description}
+        </p>
+      ) : null}
       <div className="flex flex-wrap gap-2">
         {skill.skills &&
           skill.skills.map((tag, i) => (
@@ -86,7 +92,7 @@ const Skills = () => {
   const colorVariants = ['teal', 'coral', 'neutral'];
 
   return (
-    <div className="w-full max-w-6xl mx-auto mt-12 px-4 font-mono">
+    <section id="skills" className="w-full max-w-6xl mx-auto mt-12 px-4 font-mono">
       {/* Terminal Container */}
       <div className="bg-terminal-bg relative border border-white/10 shadow-[0_0_50px_rgba(0,0,0,0.5)] overflow-hidden rounded-sm">
         {/* Grid Background */}
@@ -173,7 +179,7 @@ const Skills = () => {
         <div className="absolute bottom-0 left-0 w-4 h-4 md:w-6 md:h-6 border-b-2 border-l-2 border-teal/60 z-30" />
         <div className="absolute bottom-0 right-0 w-4 h-4 md:w-6 md:h-6 border-b-2 border-r-2 border-primary/60 z-30" />
       </div>
-    </div>
+    </section>
   );
 };
 

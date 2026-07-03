@@ -40,12 +40,18 @@ const extractMultiSelect = (arr) => arr?.map(s => s.name) || [];
 
 function normalizeRecord(page) {
   const p = page.properties;
+  const title = extractText(p['Habilidad Detallada']?.title);
+  const skills = extractMultiSelect(p['Habilidad']?.multi_select);
+  const experience = p['Experiencia']?.number || extractRichText(p['Experiencia']?.rich_text) || '';
   return {
     id: page.id,
-    title: extractText(p['Habilidad Detallada']?.title),
+    title,
+    name: title,
     description: extractRichText(p['Descripción']?.rich_text),
-    skills: extractMultiSelect(p['Habilidad']?.multi_select),
-    experience: p['Experiencia']?.number || extractRichText(p['Experiencia']?.rich_text) || '',
+    skills,
+    tags: skills,
+    experience,
+    level: experience,
     date: p['Date']?.date?.start || null,
     version: p['Versión']?.number || null,
   };

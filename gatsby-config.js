@@ -7,8 +7,10 @@
 module.exports = {
   siteMetadata: {
     title: 'Miller Correa',
-    description: 'Pagina Web principal de mis estudios y demás cosas que desarrollo en la Web.',
+    description:
+      'Portafolio de Miller Correa con experiencia, proyectos, skills y contenido técnico actualizado.',
     author: '@macorreag',
+    siteUrl: 'https://macorreag.github.io',
   },
   /* Your site config here */
   plugins: [

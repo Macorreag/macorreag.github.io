@@ -1,8 +1,12 @@
 
-const defaultTheme = require('tailwindcss/defaultTheme')
+const defaultTheme = require('tailwindcss/defaultTheme');
 
 module.exports = {
-  purge: [],
+  purge: {
+    enabled: process.env.NODE_ENV === 'production',
+    content: ['./src/**/*.{js,jsx,ts,tsx,md,mdx,html}'],
+    mode: 'layers',
+  },
   darkMode: 'class',
   theme: {
     extend: {
@@ -25,9 +29,5 @@ module.exports = {
     },
   },
   variants: {},
-  plugins: [
-  ],
-  content: [
-    "./src/**/*.{js,jsx,ts,tsx}",
-  ]
-}
+  plugins: [],
+};

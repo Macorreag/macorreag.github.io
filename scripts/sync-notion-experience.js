@@ -42,12 +42,17 @@ const extractRichText = (arr) => arr?.map((t) => t.plain_text).join('') || '';
 
 function normalizeRecord(page) {
   const p = page.properties;
+  const nombre = extractTitle(p['Nombre']?.title);
   return {
     id: page.id,
-    nombre: extractTitle(p['Nombre']?.title),
+    nombre,
+    name: nombre,
     compania: extractRichText(p['Compañía']?.rich_text),
+    company: extractRichText(p['Compañía']?.rich_text),
     fechaInicio: p['Fecha Inicio']?.date?.start || null,
     fechaFin: p['Fecha Fin']?.date?.start || null,
+    startDate: p['Fecha Inicio']?.date?.start || null,
+    endDate: p['Fecha Fin']?.date?.start || null,
     descripcion: extractRichText(p['Descripción']?.rich_text),
   };
 }
