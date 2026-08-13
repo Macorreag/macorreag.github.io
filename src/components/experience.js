@@ -161,9 +161,29 @@ const ExperienceItem = ({ item, index, isOpen, onToggle }) => {
                     Estado:
                   </span>
                   <span className={isPrimary ? 'text-primary' : 'text-teal'}>
-                    {item.fechaFin ? 'Finalizado' : 'Activo'}
+                    {item.estado || (item.fechaFin ? 'Finalizado' : 'Activo')}
                   </span>
                 </div>
+                {item.url && (
+                  <div className="flex justify-between items-center gap-3 pt-1">
+                    <span
+                      className="uppercase tracking-widest"
+                      style={{ color: 'rgba(255, 255, 255, 0.3)' }}
+                    >
+                      Referencia:
+                    </span>
+                    <a
+                      href={item.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`uppercase font-bold hover:opacity-80 transition-opacity ${
+                        isPrimary ? 'text-primary' : 'text-teal'
+                      }`}
+                    >
+                      Ver más ↗
+                    </a>
+                  </div>
+                )}
               </div>
             </div>
           )}
@@ -184,6 +204,8 @@ const Experience = () => {
           fechaInicio
           fechaFin
           descripcion
+          estado
+          url
         }
       }
     }

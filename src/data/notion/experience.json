@@ -5,7 +5,9 @@
     "compania": "Bancolombia",
     "fechaInicio": "2026-03-11",
     "fechaFin": "2026-03-25",
-    "descripcion": "Desarrollo de apps bancarias de alto impacto, enfocado en arquitectura de microservicios y experiencia de usuario para millones de clientes."
+    "descripcion": "Desarrollo de apps bancarias de alto impacto, enfocado en arquitectura de microservicios y experiencia de usuario para millones de clientes.",
+    "estado": "Finalizado",
+    "url": null
   },
   {
     "id": "exp-placeholder-2",
@@ -13,6 +15,8 @@
     "compania": "Mercadolibre",
     "fechaInicio": "2024-01-01",
     "fechaFin": null,
-    "descripcion": "Desarrollo e integración de plataformas de e-commerce a gran escala, liderando equipos distribuidos y optimizando pipelines de entrega continua."
+    "descripcion": "Desarrollo e integración de plataformas de e-commerce a gran escala, liderando equipos distribuidos y optimizando pipelines de entrega continua.",
+    "estado": "Activo",
+    "url": null
   }
 ]

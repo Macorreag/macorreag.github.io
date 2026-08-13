@@ -1,5 +1,15 @@
 const path = require('path');
 
+exports.createSchemaCustomization = ({ actions }) => {
+  const { createTypes } = actions;
+  createTypes(`
+    type ExperienceJson implements Node @infer {
+      estado: String
+      url: String
+    }
+  `);
+};
+
 exports.createPages = async ({ graphql, actions }) => {
   const result = await graphql(`
     {

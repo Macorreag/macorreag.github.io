@@ -27,7 +27,8 @@ async function describe(name, dbId) {
   console.log(`Title: ${schema.title?.[0]?.plain_text || schema.title || '(sin title)'}`);
   for (const [key, prop] of Object.entries(schema.properties)) {
     let extra = '';
-    if (prop.type === 'select') extra = ` options=[${(prop.select.options || []).map(o => o.name).join(', ')}]`;
+    if (prop.type === 'select')
+      extra = ` options=[${(prop.select.options || []).map(o => o.name).join(', ')}]`;
     if (prop.type === 'multi_select')
       extra = ` options=[${(prop.multi_select.options || []).map(o => o.name).join(', ')}]`;
     console.log(`  - "${key}"  [${prop.type}]${extra}`);
