@@ -4,8 +4,8 @@ import { faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
 
 export default props => (
   <li
-    className="flex flex-col gap-2 p-4 border border-white/10 hover:border-teal/30 transition-colors"
-    style={{ backgroundColor: 'rgba(0,245,255,0.03)' }}
+    className="flex flex-col gap-2 p-4 border border-white/10 hover:border-teal/50 hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(0,255,65,0.08)] transition duration-200"
+    style={{ backgroundColor: 'rgba(0,204,102,0.03)' }}
   >
     <div className="flex justify-between items-start gap-2">
       <h4 className="text-primary font-bold font-mono text-sm truncate">{props.repo.name}</h4>

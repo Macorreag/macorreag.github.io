@@ -1,33 +1,22 @@
-
-const defaultTheme = require('tailwindcss/defaultTheme')
-
 module.exports = {
-  purge: [],
+  content: ['./src/**/*.{js,jsx,ts,tsx}'],
   darkMode: 'class',
   theme: {
     extend: {
       colors: {
-        ...defaultTheme.colors,
-        primary: '#FF6600',
-        teal: '#00F5FF',
-        'terminal-bg': '#1E1E1E',
+        primary: '#00FF41',
+        teal: '#00CC66',
+        'terminal-bg': '#101710',
       },
       screens: {
         xs: '480px',
       },
-      minHeight: (theme) => ({
-        ...theme('spacing'),
-      }),
       fontFamily: {
         display: ['Orbitron', 'sans-serif'],
         mono: ['Fira Code', 'monospace'],
+        sans: ['Space Grotesk', 'sans-serif'],
       },
     },
   },
-  variants: {},
-  plugins: [
-  ],
-  content: [
-    "./src/**/*.{js,jsx,ts,tsx}",
-  ]
-}
+  plugins: [],
+};

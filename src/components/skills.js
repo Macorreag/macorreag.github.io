@@ -2,14 +2,17 @@ import React from 'react';
 import { useStaticQuery, graphql } from 'gatsby';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMicrochip, faDatabase } from '@fortawesome/free-solid-svg-icons';
+import syncStatusFile from '../data/notion/sync-status.json';
 
 // Componente para la barra de progreso de una habilidad
 const SkillProgressBar = ({ skill, index }) => {
   // Calcular el nivel basado en experiencia (máximo 10)
-  const level = Math.min((skill.experience || 1) * 2, 10);
+  const numericExperience = Number(skill.experience || skill.level || 1);
+  const experience = Number.isFinite(numericExperience) ? numericExperience : 1;
+  const level = Math.min(experience * 2, 10);
   const percentage = level * 10;
 
-  // Alternar colores entre teal y coral
+  // Alternar colores entre verde brillante y verde tenue
   const isTeal = index % 2 === 0;
   const colorClass = isTeal ? 'bg-teal' : 'bg-primary';
   const glowClass = isTeal ? 'glow-teal' : 'glow-coral';
@@ -27,7 +30,7 @@ const SkillProgressBar = ({ skill, index }) => {
       </div>
       <div className="w-full bg-black/40 h-2 rounded-none overflow-hidden border border-white/5">
         <div
-          className={`${colorClass} h-full ${glowClass} transition-all duration-500`}
+          className={`${colorClass} h-full ${glowClass} transition duration-500`}
           style={{ width: `${percentage}%` }}
         />
       </div>
@@ -55,7 +58,7 @@ const SkillTags = ({ skill, colorVariant }) => {
           skill.skills.map((tag, i) => (
             <span
               key={i}
-              className={`px-3 py-1 border text-xs transition-all cursor-crosshair font-mono ${tagClass}`}
+              className={`px-3 py-1 border text-xs transition cursor-crosshair font-mono ${tagClass}`}
             >
               {tag}
             </span>
@@ -81,12 +84,18 @@ const Skills = () => {
   `);
 
   const skills = data.allSkillsJson.nodes;
+  const syncStatus = syncStatusFile.skills || {};
+  const isSynced = syncStatus.source === 'notion';
+  const lastSyncLabel =
+    syncStatus && syncStatus.lastSyncedAt
+      ? new Date(syncStatus.lastSyncedAt).toISOString().slice(0, 10)
+      : 'N/A';
 
   // Variantes de color para los módulos
   const colorVariants = ['teal', 'coral', 'neutral'];
 
   return (
-    <div className="w-full max-w-6xl mx-auto mt-12 px-4 font-mono">
+    <section id="skills" className="w-full max-w-6xl mx-auto mt-12 px-4 font-mono scroll-mt-20">
       {/* Terminal Container */}
       <div className="bg-terminal-bg relative border border-white/10 shadow-[0_0_50px_rgba(0,0,0,0.5)] overflow-hidden rounded-sm">
         {/* Grid Background */}
@@ -96,14 +105,24 @@ const Skills = () => {
         <div className="relative z-20 border-b border-white/10 p-4 md:p-6 flex flex-col md:flex-row justify-between items-baseline gap-4 bg-black/20">
           <div>
             <h2 className="font-display text-xl md:text-2xl font-bold tracking-[0.2em] text-white flex items-center gap-3">
-              <FontAwesomeIcon icon={faMicrochip} className="text-primary animate-pulse" size="sm" />
+              <FontAwesomeIcon
+                icon={faMicrochip}
+                className="text-primary animate-pulse"
+                size="sm"
+              />
               SKILLS_MANIFEST
             </h2>
             <div className="h-0.5 w-24 bg-primary mt-1" />
           </div>
           <div className="text-xs tracking-widest text-gray-400 uppercase font-mono">
-            System.Status: <span className="text-teal font-bold">Optimal</span> | Notion.Sync:{' '}
-            <span className="text-teal font-bold">Active</span>
+            System.Status:{' '}
+            <span className={isSynced ? 'text-teal font-bold' : 'text-amber-400 font-bold'}>
+              {isSynced ? 'Optimal' : 'Placeholder'}
+            </span>{' '}
+            | Notion.Sync:{' '}
+            <span className={isSynced ? 'text-teal font-bold' : 'text-amber-400 font-bold'}>
+              {isSynced ? `Active_${lastSyncLabel}` : 'Offline'}
+            </span>
           </div>
         </div>
 
@@ -159,7 +178,7 @@ const Skills = () => {
         {/* Footer */}
         <div className="relative z-20 border-t border-white/20 p-3 md:p-4 bg-black/60 flex flex-col md:flex-row justify-between items-center gap-2 overflow-hidden">
           <div className="text-xs text-teal font-mono flex items-center gap-3">
-            <span className="w-2 h-2 bg-teal rounded-full animate-pulse shadow-[0_0_8px_#00f5ff]" />
+            <span className="w-2 h-2 bg-teal rounded-full animate-pulse shadow-[0_0_8px_#00ff41]" />
             ACTIVE_SESSION: SKILLS.EXE
           </div>
           <div className="text-xs text-primary font-mono tracking-tight">
@@ -173,7 +192,7 @@ const Skills = () => {
         <div className="absolute bottom-0 left-0 w-4 h-4 md:w-6 md:h-6 border-b-2 border-l-2 border-teal/60 z-30" />
         <div className="absolute bottom-0 right-0 w-4 h-4 md:w-6 md:h-6 border-b-2 border-r-2 border-primary/60 z-30" />
       </div>
-    </div>
+    </section>
   );
 };
 

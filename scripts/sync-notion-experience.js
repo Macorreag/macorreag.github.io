@@ -6,10 +6,12 @@
 
 const fs = require('fs');
 const path = require('path');
+const { setStatus } = require('./sync-status');
 
 const NOTION_API_KEY = process.env.NOTION_API_KEY;
 const NOTION_EXPERIENCE_DATABASE_ID = process.env.NOTION_EXPERIENCE_DATABASE_ID;
 const OUTPUT_PATH = path.join(__dirname, '../src/data/notion/experience.json');
+const IS_CI = process.env.CI === 'true' || process.env.GITHUB_ACTIONS === 'true';
 
 async function fetchNotionDatabase(startCursor = undefined) {
   const response = await fetch(
@@ -26,7 +28,7 @@ async function fetchNotionDatabase(startCursor = undefined) {
         page_size: 100,
         sorts: [{ property: 'Fecha Inicio', direction: 'descending' }],
       }),
-    }
+    },
   );
 
   if (!response.ok) {
@@ -37,8 +39,8 @@ async function fetchNotionDatabase(startCursor = undefined) {
 }
 
 // Extrae texto de propiedades de Notion
-const extractTitle = (prop) => prop?.[0]?.plain_text || '';
-const extractRichText = (arr) => arr?.map((t) => t.plain_text).join('') || '';
+const extractTitle = prop => prop?.[0]?.plain_text || '';
+const extractRichText = arr => arr?.map(t => t.plain_text).join('') || '';
 
 function normalizeRecord(page) {
   const p = page.properties;
@@ -54,8 +56,17 @@ function normalizeRecord(page) {
 
 async function syncNotionExperience() {
   if (!NOTION_API_KEY || !NOTION_EXPERIENCE_DATABASE_ID) {
+    if (IS_CI) {
+      console.error(
+        '❌ Error: NOTION_API_KEY o NOTION_EXPERIENCE_DATABASE_ID no configuradas en CI.\n' +
+          '   La sincronización es obligatoria en producción para no desplegar datos placeholder.\n' +
+          '   Configura los secrets en GitHub: Settings > Secrets and variables > Actions.',
+      );
+      process.exit(1);
+    }
     console.log('⚠️  Variables NOTION_API_KEY o NOTION_EXPERIENCE_DATABASE_ID no configuradas.');
-    console.log('   Usando datos placeholder para desarrollo.');
+    console.log('   Usando datos placeholder para desarrollo local.');
+    setStatus('experience', { source: 'placeholder', lastSyncedAt: null });
     return;
   }
 
@@ -81,10 +92,15 @@ async function syncNotionExperience() {
   }
 
   fs.writeFileSync(OUTPUT_PATH, JSON.stringify(allRecords, null, 2));
+  setStatus('experience', {
+    source: 'notion',
+    lastSyncedAt: new Date().toISOString(),
+    count: allRecords.length,
+  });
   console.log(`✅ Sincronizados ${allRecords.length} registros de experiencia en ${OUTPUT_PATH}`);
 }
 
-syncNotionExperience().catch((err) => {
+syncNotionExperience().catch(err => {
   console.error('❌ Error sincronizando experiencia con Notion:', err.message);
   process.exit(1);
 });

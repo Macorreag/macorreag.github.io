@@ -1,30 +1,29 @@
 import React, { useState } from 'react';
 import { useStaticQuery, graphql } from 'gatsby';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBriefcase, faBolt, faLocationDot, faChevronDown } from '@fortawesome/free-solid-svg-icons';
+import { faBriefcase, faBolt, faChevronDown } from '@fortawesome/free-solid-svg-icons';
+import syncStatusFile from '../data/notion/sync-status.json';
 
-const formatDate = (dateStr) => {
+const formatDate = dateStr => {
   if (!dateStr) return 'Presente';
   const date = new Date(dateStr + 'T00:00:00');
   return date.toLocaleDateString('es-CO', { month: '2-digit', year: 'numeric' });
 };
 
 const ExperienceItem = ({ item, index, isOpen, onToggle }) => {
-  const isCoral = index % 2 === 0;
-  const accentColor = isCoral ? 'primary' : 'teal';
-  const glowStyle = isCoral
+  const isPrimary = index % 2 === 0;
+  const accentColor = isPrimary ? 'primary' : 'teal';
+  const glowStyle = isPrimary
     ? {
-        border: '1px solid rgba(255, 102, 0, 0.3)',
-        boxShadow: '0 0 15px rgba(255, 102, 0, 0.1), inset 0 0 10px rgba(255, 102, 0, 0.05)',
+        border: '1px solid rgba(0, 255, 65, 0.3)',
+        boxShadow: '0 0 15px rgba(0, 255, 65, 0.1), inset 0 0 10px rgba(0, 255, 65, 0.05)',
       }
     : {
-        border: '1px solid rgba(0, 245, 255, 0.3)',
-        boxShadow: '0 0 15px rgba(0, 245, 255, 0.1), inset 0 0 10px rgba(0, 245, 255, 0.05)',
+        border: '1px solid rgba(0, 204, 102, 0.3)',
+        boxShadow: '0 0 15px rgba(0, 204, 102, 0.1), inset 0 0 10px rgba(0, 204, 102, 0.05)',
       };
 
-  const nodeId = `${item.compania || 'NODE'}_v${index + 1}.0`
-    .toUpperCase()
-    .replace(/\s+/g, '_');
+  const nodeId = `${item.compania || 'NODE'}_v${index + 1}.0`.toUpperCase().replace(/\s+/g, '_');
   const startYear = item.fechaInicio ? new Date(item.fechaInicio).getFullYear() : 'N/A';
 
   return (
@@ -36,13 +35,15 @@ const ExperienceItem = ({ item, index, isOpen, onToggle }) => {
           style={{
             width: '12px',
             height: '12px',
-            background: isCoral ? '#FF6600' : '#00F5FF',
+            background: isPrimary ? '#00FF41' : '#00CC66',
             border: '1px solid rgba(255,255,255,0.5)',
-            boxShadow: isCoral ? '0 0 15px #FF6600' : '0 0 15px #00F5FF',
+            boxShadow: isPrimary ? '0 0 15px #00FF41' : '0 0 15px #00CC66',
           }}
         />
         <span
-          className={`font-display text-xs md:text-sm font-black tracking-tighter mt-6 ${isCoral ? 'text-primary' : 'text-teal'}`}
+          className={`font-display text-xs md:text-sm font-black tracking-tighter mt-6 ${
+            isPrimary ? 'text-primary' : 'text-teal'
+          }`}
         >
           {startYear}
         </span>
@@ -65,16 +66,20 @@ const ExperienceItem = ({ item, index, isOpen, onToggle }) => {
               <div className="w-2.5 h-2.5 rounded-full bg-teal/80" />
               <div className="w-2.5 h-2.5 rounded-full bg-white/20" />
             </div>
-            <span className="text-xs font-bold font-mono uppercase tracking-widest hidden sm:block" style={{ color: 'rgba(0, 245, 255, 0.5)' }}>
+            <span
+              className="text-xs font-bold font-mono uppercase tracking-widest hidden sm:block"
+              style={{ color: 'rgba(0, 204, 102, 0.5)' }}
+            >
               Node_Identity: {nodeId}
             </span>
           </div>
 
           {/* Toggle button / summary row */}
           <button
-            className="w-full text-left p-4 md:p-6 focus:outline-none group/btn text-white"
+            className="w-full text-left p-4 md:p-6 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 group/btn text-white hover:bg-white/[0.03] transition-colors"
             onClick={onToggle}
             aria-expanded={isOpen}
+            style={{ touchAction: 'manipulation' }}
           >
             <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-3">
               <div>
@@ -82,7 +87,9 @@ const ExperienceItem = ({ item, index, isOpen, onToggle }) => {
                   {item.compania || '—'}
                 </h3>
                 <p
-                  className={`text-xs uppercase tracking-widest font-bold opacity-80 mt-1 font-mono ${isCoral ? 'text-primary' : 'text-teal'}`}
+                  className={`text-xs uppercase tracking-widest font-bold opacity-80 mt-1 font-mono ${
+                    isPrimary ? 'text-primary' : 'text-teal'
+                  }`}
                 >
                   {item.nombre || '—'}
                 </p>
@@ -93,7 +100,9 @@ const ExperienceItem = ({ item, index, isOpen, onToggle }) => {
                     Timestamp
                   </span>
                   <span
-                    className={`text-xs font-bold tracking-widest font-mono ${isCoral ? 'text-primary' : 'text-teal'}`}
+                    className={`text-xs font-bold tracking-widest font-mono ${
+                      isPrimary ? 'text-primary' : 'text-teal'
+                    }`}
                   >
                     {formatDate(item.fechaInicio)} — {formatDate(item.fechaFin)}
                   </span>
@@ -101,7 +110,9 @@ const ExperienceItem = ({ item, index, isOpen, onToggle }) => {
                 {/* Expand/collapse icon */}
                 <FontAwesomeIcon
                   icon={faChevronDown}
-                  className={`text-sm font-bold transition-transform duration-300 ${isOpen ? 'rotate-180' : ''} ${isCoral ? 'text-primary' : 'text-teal'}`}
+                  className={`text-sm font-bold transition-transform duration-300 ${
+                    isOpen ? 'rotate-180' : ''
+                  } ${isPrimary ? 'text-primary' : 'text-teal'}`}
                   style={{ display: 'inline-block' }}
                 />
               </div>
@@ -114,23 +125,42 @@ const ExperienceItem = ({ item, index, isOpen, onToggle }) => {
               <div className="mt-6 relative">
                 <FontAwesomeIcon
                   icon={faBolt}
-                  className={`text-xs absolute -left-2 top-0 italic font-bold opacity-40 ${isCoral ? 'text-primary' : 'text-teal'}`}
+                  className={`text-xs absolute -left-2 top-0 italic font-bold opacity-40 ${
+                    isPrimary ? 'text-primary' : 'text-teal'
+                  }`}
                 />
-                <p className="text-sm leading-relaxed pl-3" style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+                <p
+                  className="text-sm leading-relaxed pl-3"
+                  style={{ color: 'rgba(255, 255, 255, 0.8)' }}
+                >
                   {item.descripcion || 'Sin descripción disponible.'}
                 </p>
               </div>
               {/* Metadata footer */}
               <div
-                className={`mt-6 p-4 bg-black/40 border-l-2 space-y-2 text-xs font-mono ${isCoral ? 'border-primary/40' : 'border-teal/40'}`}
+                className={`mt-6 p-4 bg-black/40 border-l-2 space-y-2 text-xs font-mono ${
+                  isPrimary ? 'border-primary/40' : 'border-teal/40'
+                }`}
               >
                 <div className="flex justify-between">
-                  <span className="uppercase tracking-widest" style={{ color: 'rgba(255, 255, 255, 0.3)' }}>Compañía:</span>
-                  <span className="uppercase" style={{ color: 'rgba(255, 255, 255, 0.6)' }}>{item.compania || '—'}</span>
+                  <span
+                    className="uppercase tracking-widest"
+                    style={{ color: 'rgba(255, 255, 255, 0.3)' }}
+                  >
+                    Compañía:
+                  </span>
+                  <span className="uppercase" style={{ color: 'rgba(255, 255, 255, 0.6)' }}>
+                    {item.compania || '—'}
+                  </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="uppercase tracking-widest" style={{ color: 'rgba(255, 255, 255, 0.3)' }}>Estado:</span>
-                  <span className={isCoral ? 'text-primary' : 'text-teal'}>
+                  <span
+                    className="uppercase tracking-widest"
+                    style={{ color: 'rgba(255, 255, 255, 0.3)' }}
+                  >
+                    Estado:
+                  </span>
+                  <span className={isPrimary ? 'text-primary' : 'text-teal'}>
                     {item.fechaFin ? 'Finalizado' : 'Activo'}
                   </span>
                 </div>
@@ -159,10 +189,18 @@ const Experience = () => {
     }
   `);
 
-  const experiences = data.allExperienceJson.nodes;
+  const experiences = [...data.allExperienceJson.nodes].sort(
+    (a, b) => new Date(b.fechaInicio || 0) - new Date(a.fechaInicio || 0),
+  );
+  const syncStatus = syncStatusFile.experience || {};
+  const isSynced = syncStatus.source === 'notion';
+  const lastSyncLabel =
+    syncStatus && syncStatus.lastSyncedAt
+      ? new Date(syncStatus.lastSyncedAt).toISOString().slice(0, 10)
+      : 'N/A';
   const [openIndices, setOpenIndices] = useState(new Set([0]));
 
-  const handleToggle = (index) => {
+  const handleToggle = index => {
     setOpenIndices(prev => {
       const next = new Set(prev);
       if (next.has(index)) {
@@ -175,7 +213,7 @@ const Experience = () => {
   };
 
   return (
-    <div className="w-full max-w-6xl mx-auto mt-12 px-4 font-mono">
+    <section id="experience" className="w-full max-w-6xl mx-auto mt-12 px-4 font-mono scroll-mt-20">
       {/* Terminal Container */}
       <div className="bg-terminal-bg relative border border-white/10 shadow-2xl overflow-hidden rounded-sm">
         {/* Grid Background */}
@@ -185,7 +223,11 @@ const Experience = () => {
         <div className="relative z-20 border-b border-white/10 p-4 md:p-6 flex flex-col md:flex-row justify-between items-baseline gap-4 bg-black/20">
           <div>
             <h2 className="font-display text-xl md:text-2xl font-bold tracking-widest text-white flex items-center gap-3 uppercase">
-              <FontAwesomeIcon icon={faBriefcase} className="text-primary animate-pulse" size="sm" />
+              <FontAwesomeIcon
+                icon={faBriefcase}
+                className="text-primary animate-pulse"
+                size="sm"
+              />
               EXEC_PATH
               <span className="text-teal">.history</span>
             </h2>
@@ -193,21 +235,37 @@ const Experience = () => {
           </div>
           <div className="text-xs tracking-widest text-gray-400 uppercase font-mono">
             Nodes_Located:{' '}
-            <span className="text-primary font-bold">{String(experiences.length).padStart(2, '0')}</span>{' '}
-            | Notion.Sync: <span className="text-teal font-bold">Active</span>
+            <span className="text-primary font-bold">
+              {String(experiences.length).padStart(2, '0')}
+            </span>{' '}
+            | Notion.Sync:{' '}
+            <span className={isSynced ? 'text-teal font-bold' : 'text-amber-400 font-bold'}>
+              {isSynced ? `Active_${lastSyncLabel}` : 'Offline'}
+            </span>
           </div>
         </div>
 
         {/* Status bar */}
         <div className="relative z-20 border-b border-white/10 px-4 md:px-6 py-3 bg-black/10 flex flex-wrap items-center gap-6">
           <div className="flex items-center gap-2">
-            <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-            <span className="text-xs text-green-500 uppercase font-bold tracking-widest">
-              Connection_Stable
+            <span
+              className={`w-2 h-2 rounded-full animate-pulse ${
+                isSynced ? 'bg-green-500' : 'bg-amber-400'
+              }`}
+            />
+            <span
+              className={`text-xs uppercase font-bold tracking-widest ${
+                isSynced ? 'text-green-500' : 'text-amber-400'
+              }`}
+            >
+              {isSynced ? 'Connection_Stable' : 'Placeholder_Data'}
             </span>
           </div>
           <span className="text-xs text-white/40 uppercase tracking-widest">
-            Buffer_Status: <span className="text-teal">Optimal</span>
+            Buffer_Status:{' '}
+            <span className={isSynced ? 'text-teal' : 'text-amber-400'}>
+              {isSynced ? 'Optimal' : 'Not_Synced'}
+            </span>
           </span>
         </div>
 
@@ -218,7 +276,7 @@ const Experience = () => {
             className="absolute left-[55px] md:left-[71px] top-4 bottom-4 w-px opacity-30 pointer-events-none"
             style={{
               background:
-                'linear-gradient(to bottom, transparent, #FF6600 15%, #00F5FF 50%, #FF6600 85%, transparent)',
+                'linear-gradient(to bottom, transparent, #00FF41 15%, #00CC66 50%, #00FF41 85%, transparent)',
             }}
           />
 
@@ -238,7 +296,7 @@ const Experience = () => {
         {/* Footer */}
         <div className="relative z-20 border-t border-white/20 p-3 md:p-4 bg-black/60 flex flex-col md:flex-row justify-between items-center gap-2 overflow-hidden">
           <div className="text-xs text-teal font-mono flex items-center gap-3">
-            <span className="w-2 h-2 bg-teal rounded-full animate-pulse shadow-[0_0_8px_#00f5ff]" />
+            <span className="w-2 h-2 bg-teal rounded-full animate-pulse shadow-[0_0_8px_#00ff41]" />
             ACTIVE_SESSION: EXPERIENCE.LOG
           </div>
           <div className="text-xs text-primary font-mono tracking-tight">
@@ -253,7 +311,7 @@ const Experience = () => {
         <div className="absolute bottom-0 left-0 w-4 h-4 md:w-6 md:h-6 border-b-2 border-l-2 border-teal/60 z-30" />
         <div className="absolute bottom-0 right-0 w-4 h-4 md:w-6 md:h-6 border-b-2 border-r-2 border-primary/60 z-30" />
       </div>
-    </div>
+    </section>
   );
 };
 
