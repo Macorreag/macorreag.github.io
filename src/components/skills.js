@@ -5,22 +5,28 @@ import { faMicrochip, faLayerGroup } from '@fortawesome/free-solid-svg-icons';
 import syncStatusFile from '../data/notion/sync-status.json';
 
 // Agrupa las habilidades por su categoría (campo "skills" de Notion).
-// Cada registro de Notion es: title = habilidad específica, skills = categorías.
+// El texto útil puede venir en "title" o en "description" según el esquema:
+// - Placeholder: title = área, description = detalle.
+// - Datos reales de Notion: title suele venir vacío y el texto está en description.
 const groupByCategory = nodes => {
   const groups = new Map();
 
   for (const skill of nodes) {
     const title = (skill.title || '').trim();
-    if (!title) continue; // omite filas vacías
+    const description = (skill.description || '').trim();
+
+    // Texto principal: "title" si existe, si no "description".
+    const name = title || description;
+    if (!name) continue; // omite filas vacías
+
+    // Detalle/subtítulo: solo cuando "title" y "description" son distintos.
+    const detail = title ? description : '';
 
     const categories = skill.skills && skill.skills.length > 0 ? skill.skills : ['Otras'];
 
     for (const category of categories) {
       if (!groups.has(category)) groups.set(category, []);
-      groups.get(category).push({
-        title,
-        description: (skill.description || '').trim(),
-      });
+      groups.get(category).push({ name, detail });
     }
   }
 
@@ -28,7 +34,7 @@ const groupByCategory = nodes => {
     .sort((a, b) => b[1].length - a[1].length) // categorías con más items primero
     .map(([category, items]) => ({
       category,
-      items: items.sort((a, b) => a.title.localeCompare(b.title, 'es')),
+      items: items.sort((a, b) => a.name.localeCompare(b.name, 'es')),
     }));
 };
 
@@ -99,7 +105,6 @@ const Skills = () => {
           {categories.map((group, index) => {
             const isPrimary = index % 2 === 0;
             const accentText = isPrimary ? 'text-primary' : 'text-teal';
-            const accentBar = isPrimary ? 'bg-primary glow-coral' : 'bg-teal glow-teal';
             const accentBorder = isPrimary ? 'border-primary/40' : 'border-teal/40';
             const accentBg = isPrimary ? 'bg-primary/10' : 'bg-teal/10';
 
@@ -131,16 +136,16 @@ const Skills = () => {
 
                 <ul className="space-y-1.5">
                   {group.items.map(item => (
-                    <li key={item.title} className="text-sm leading-snug">
+                    <li key={item.name} className="text-sm leading-snug">
                       <span className="text-white/85">
                         <span className={`mr-2 ${accentText}`} aria-hidden="true">
                           ▸
                         </span>
-                        {item.title}
+                        {item.name}
                       </span>
-                      {item.description && (
+                      {item.detail && (
                         <span className="block pl-5 text-xs text-white/45 mt-0.5 leading-relaxed">
-                          {item.description}
+                          {item.detail}
                         </span>
                       )}
                     </li>
