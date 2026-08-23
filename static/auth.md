@@ -1,33 +1,40 @@
 # auth.md
 
-Documento de descubrimiento de autenticación para agentes (Auth.md / Web Bot
-Auth). Describe cómo un agente de IA puede interactuar con este sitio.
+Documento de descubrimiento de registro de agentes (Auth.md). Describe cómo un
+agente de IA se autentica —o no— para interactuar con este sitio.
 
-## Audiencia
+## Resumen
 
-Agentes de IA, crawlers y herramientas automatizadas que quieran leer o usar el
-contenido del portafolio de Miller Correa.
+El portafolio de Miller Correa (`https://macorreag.github.io`) es **público y de
+solo lectura**. No expone APIs protegidas ni requiere registro: cualquier agente
+puede leer todo el contenido de forma anónima por HTTP/HTTPS.
 
-## Identidad
+## agent_auth
 
-- Sitio: `https://macorreag.github.io`
-- Titular: Miller Correa (`@macorreag`)
-- Contacto: `macorreag@unal.edu.co`
-- GitHub: `https://github.com/macorreag`
-
-## Acceso y registro
-
-Este portafolio es **público** y de solo lectura. **No requiere autenticación**:
-todos los recursos (páginas, `llms.txt`, `sitemap.xml` y el catálogo de
-capacidades en `/.well-known/ai-catalog.json`) son accesibles de forma anónima
-por HTTP/HTTPS.
-
-No existe un endpoint de aprovisionamiento ni de emisión de credenciales, porque
-no hay recursos protegidos.
+```json
+{
+  "agent_auth": {
+    "skill": "https://macorreag.github.io/auth.md",
+    "register_uri": null,
+    "identity_types_supported": ["anonymous"],
+    "anonymous": {
+      "credential_types_supported": [],
+      "claim_uri": "https://macorreag.github.io/auth.md"
+    }
+  }
+}
+```
 
 ## Métodos soportados
 
 - `anonymous` — acceso público sin credenciales (único método soportado).
+  - `credential_types_supported`: ninguno (no se emiten credenciales).
+
+## Registro
+
+No existe endpoint de registro (`register_uri: null`): no hay recursos
+protegidos que requieran aprovisionamiento. La audiencia son agentes de IA,
+crawlers y herramientas automatizadas.
 
 ## Uso de credenciales
 
