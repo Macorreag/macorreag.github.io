@@ -1,0 +1,26 @@
+# Miller Correa — Portafolio
+
+> Portafolio personal de Miller Correa (Ingeniero de Sistemas / Senior Systems
+> Architect). Incluye su formación académica, cursos, experiencia profesional,
+> habilidades técnicas y proyectos open source.
+
+## Información general
+
+- Sitio: https://macorreag.github.io
+- Email: macorreag@unal.edu.co
+- GitHub: https://github.com/macorreag
+
+## Secciones principales
+
+- [Formación Académica](https://macorreag.github.io/presencial/): grados de estudio e instituciones.
+- [Cursos en línea](https://macorreag.github.io/on-line/): cursos realizados en plataformas de educación en internet.
+- [Otros logros académicos](https://macorreag.github.io/others/): talleres, diplomados y conferencias.
+- [Habilidades](https://macorreag.github.io/#skills): stack técnico (JavaScript, React, Node.js, DevOps, etc.).
+- [Experiencia](https://macorreag.github.io/#experience): historial profesional.
+- [Repositorios](https://macorreag.github.io/#open-source): proyectos open source.
+
+## Para agentes
+
+- Catálogo de capacidades (ARD): https://macorreag.github.io/.well-known/ai-catalog.json
+- Servidor MCP: https://macorreag-portfolio-mcp.macorreag.workers.dev/mcp
+- Contenido extendido: https://macorreag.github.io/llms-full.txt

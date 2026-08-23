@@ -1,0 +1,20 @@
+{
+  "specVersion": "1.0",
+  "host": {
+    "displayName": "Miller Correa — Portafolio",
+    "identifier": "did:web:macorreag.github.io"
+  },
+  "entries": [
+    {
+      "identifier": "urn:air:macorreag.github.io:server:portfolio-mcp",
+      "displayName": "Portfolio MCP Server",
+      "type": "application/mcp-server-card+json",
+      "url": "https://macorreag.github.io/.well-known/mcp/server-card.json",
+      "representativeQueries": [
+        "¿qué proyectos ha desarrollado Miller Correa?",
+        "¿cuál es la formación académica de Miller Correa?",
+        "¿cómo contactar a Miller Correa?"
+      ]
+    }
+  ]
+}

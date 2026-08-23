@@ -1,0 +1,56 @@
+# Miller Correa — Portafolio (contenido extendido)
+
+## Perfil
+
+Miller Correa es Ingeniero de Sistemas y Senior Systems Architect. Se especializa
+en sistemas distribuidos de alto rendimiento e interfaces web. Trabaja con
+JavaScript, React, Node.js, Gatsby, DevOps/CI-CD y plataformas cloud.
+
+- Email: macorreag@unal.edu.co
+- GitHub: https://github.com/macorreag
+
+## Formación Académica
+
+Página: https://macorreag.github.io/presencial/
+
+Formación académica, grados de estudio e instituciones a las que asistió.
+
+## Cursos en línea
+
+Página: https://macorreag.github.io/on-line/
+
+Cursos realizados en plataformas de educación en internet.
+
+## Otros logros académicos
+
+Página: https://macorreag.github.io/others/
+
+Talleres, diplomados y conferencias en las que ha participado.
+
+## Habilidades
+
+Página: https://macorreag.github.io/#skills
+
+- JavaScript Avanzado: ES6+, async/await, patrones de diseño, Node.js, TypeScript.
+- React & Gatsby: sitios estáticos y SPAs, GraphQL, Redux.
+- DevOps & CI/CD: GitHub Actions, Docker, Kubernetes.
+
+## Experiencia
+
+Página: https://macorreag.github.io/#experience
+
+- Senior Developer (Mercadolibre): e-commerce a gran escala, equipos distribuidos, entrega continua.
+- Senior Developer (Bancolombia): arquitectura de microservicios para apps bancarias.
+
+## Proyectos open source
+
+Página: https://macorreag.github.io/#open-source
+
+Repositorios públicos disponibles en https://github.com/macorreag.
+
+## Recursos para agentes
+
+- robots.txt: https://macorreag.github.io/robots.txt
+- sitemap.xml: https://macorreag.github.io/sitemap.xml
+- Catálogo de capacidades (ARD): https://macorreag.github.io/.well-known/ai-catalog.json
+- Servidor MCP: https://macorreag-portfolio-mcp.macorreag.workers.dev/mcp

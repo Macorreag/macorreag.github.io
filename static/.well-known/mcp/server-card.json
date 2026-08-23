@@ -1,0 +1,15 @@
+{
+  "serverInfo": {
+    "name": "macorreag-portfolio-mcp",
+    "version": "0.1.0"
+  },
+  "description": "Copiloto de IA del portafolio de Miller Correa. Servidor MCP (Streamable HTTP) que expone herramientas para explorar el sitio, sus proyectos y su formación.",
+  "url": "https://macorreag-portfolio-mcp.macorreag.workers.dev/mcp",
+  "transport": {
+    "type": "streamable-http"
+  },
+  "capabilities": {
+    "tools": true,
+    "resources": true
+  }
+}
