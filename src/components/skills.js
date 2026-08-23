@@ -1,70 +1,109 @@
 import React from 'react';
 import { useStaticQuery, graphql } from 'gatsby';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMicrochip, faDatabase } from '@fortawesome/free-solid-svg-icons';
+import { faMicrochip, faBolt } from '@fortawesome/free-solid-svg-icons';
 import syncStatusFile from '../data/notion/sync-status.json';
 
-// Componente para la barra de progreso de una habilidad
-const SkillProgressBar = ({ skill, index }) => {
-  // Calcular el nivel basado en experiencia (máximo 10)
-  const numericExperience = Number(skill.experience || skill.level || 1);
-  const experience = Number.isFinite(numericExperience) ? numericExperience : 1;
-  const level = Math.min(experience * 2, 10);
-  const percentage = level * 10;
-
-  // Alternar colores entre verde brillante y verde tenue
-  const isTeal = index % 2 === 0;
-  const colorClass = isTeal ? 'bg-teal' : 'bg-primary';
-  const glowClass = isTeal ? 'glow-teal' : 'glow-coral';
-  const textColorClass = isTeal ? 'text-teal' : 'text-primary';
-
-  return (
-    <div className="group">
-      <div className="flex justify-between items-end mb-2">
-        <label className="text-sm font-bold text-white uppercase tracking-wider font-mono">
-          {skill.title}
-        </label>
-        <span className={`${textColorClass} font-mono text-xs font-semibold`}>
-          {level.toFixed(1)} / 10.0
-        </span>
-      </div>
-      <div className="w-full bg-black/40 h-2 rounded-none overflow-hidden border border-white/5">
-        <div
-          className={`${colorClass} h-full ${glowClass} transition duration-500`}
-          style={{ width: `${percentage}%` }}
-        />
-      </div>
-    </div>
-  );
+// Convierte el campo "experiencia" (años) en un valor numérico seguro.
+// Si no es numérico (o está vacío), devuelve null para no mostrar la barra.
+const parseYears = experience => {
+  const num = Number(experience);
+  return Number.isFinite(num) && num > 0 ? num : null;
 };
 
-// Componente para mostrar las etiquetas de skills
-const SkillTags = ({ skill, colorVariant }) => {
-  const variants = {
-    teal: 'bg-teal/10 border-teal/40 text-teal hover:bg-teal/20 hover:border-teal',
-    coral: 'bg-primary/10 border-primary/40 text-primary hover:bg-primary/20 hover:border-primary',
-    neutral: 'bg-white/10 border-white/30 text-white hover:bg-white/20 hover:border-white/60',
-  };
+// Etiqueta legible para la experiencia: "3 años", "1 año".
+const formatYears = years => `${years} ${years === 1 ? 'año' : 'años'}`;
 
-  const tagClass = variants[colorVariant] || variants.teal;
+// Variantes de color por tarjeta (clases literales para que Tailwind JIT las detecte).
+const ACCENTS = {
+  primary: {
+    badge: 'text-primary border-primary/40 bg-primary/10',
+    bolt: 'text-primary',
+    years: 'text-primary',
+    bar: 'bg-primary glow-coral',
+    tag: 'border-primary/40 text-white/80 bg-white/5 hover:bg-white/10',
+  },
+  teal: {
+    badge: 'text-teal border-teal/40 bg-teal/10',
+    bolt: 'text-teal',
+    years: 'text-teal',
+    bar: 'bg-teal glow-teal',
+    tag: 'border-teal/40 text-white/80 bg-white/5 hover:bg-white/10',
+  },
+};
+
+// Tarjeta individual de una competencia. Muestra TODA la información útil
+// que viene de Notion: título, descripción, años de experiencia y tecnologías.
+const SkillCard = ({ skill, index, maxYears }) => {
+  const isPrimary = index % 2 === 0;
+  const accent = ACCENTS[isPrimary ? 'primary' : 'teal'];
+  const years = parseYears(skill.experience);
+
+  // Ancho relativo de la barra respecto a la competencia con más años.
+  const barWidth = years && maxYears ? Math.round((years / maxYears) * 100) : 0;
 
   return (
-    <div>
-      <div className="text-xs text-white font-bold tracking-[0.15em] mb-3 uppercase border-l-2 border-primary pl-3 font-mono">
-        {skill.title.replace(/\s+/g, '_')}
+    <article
+      className="bg-black/20 border border-white/10 rounded-sm p-5 flex flex-col gap-3 hover:border-white/25 transition-colors"
+      style={{
+        background: 'linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0))',
+      }}
+    >
+      {/* Título + años de experiencia */}
+      <div className="flex items-start justify-between gap-3">
+        <h3 className="font-display text-base md:text-lg font-bold text-white tracking-tight leading-snug">
+          {skill.title}
+        </h3>
+        {years && (
+          <span
+            className={`shrink-0 text-xs font-bold font-mono uppercase tracking-wider px-2.5 py-1 border rounded-sm ${accent.badge}`}
+          >
+            {formatYears(years)}
+          </span>
+        )}
       </div>
-      <div className="flex flex-wrap gap-2">
-        {skill.skills &&
-          skill.skills.map((tag, i) => (
+
+      {/* Descripción (antes no se mostraba) */}
+      <p className="text-sm leading-relaxed text-white/70">
+        {skill.description || 'Sin descripción disponible.'}
+      </p>
+
+      {/* Barra de experiencia relativa + etiqueta */}
+      {years && (
+        <div className="mt-auto pt-1">
+          <div className="flex items-center justify-between mb-1.5">
+            <span className="text-[10px] uppercase tracking-[0.2em] text-white/40 font-mono flex items-center gap-1.5">
+              <FontAwesomeIcon
+                icon={faBolt}
+                className={`${accent.bolt} text-[9px]`}
+                aria-hidden="true"
+              />
+              Experiencia
+            </span>
+            <span className={`text-xs font-mono font-semibold ${accent.years}`}>
+              {formatYears(years)}
+            </span>
+          </div>
+          <div className="w-full h-1.5 bg-black/40 border border-white/5 overflow-hidden">
+            <div className={`h-full ${accent.bar}`} style={{ width: `${barWidth}%` }} />
+          </div>
+        </div>
+      )}
+
+      {/* Tecnologías */}
+      {skill.skills && skill.skills.length > 0 && (
+        <div className="flex flex-wrap gap-1.5 pt-1">
+          {skill.skills.map((tag, i) => (
             <span
               key={i}
-              className={`px-3 py-1 border text-xs transition cursor-crosshair font-mono ${tagClass}`}
+              className={`px-2 py-0.5 border text-[11px] font-mono transition cursor-default ${accent.tag}`}
             >
               {tag}
             </span>
           ))}
-      </div>
-    </div>
+        </div>
+      )}
+    </article>
   );
 };
 
@@ -83,16 +122,21 @@ const Skills = () => {
     }
   `);
 
-  const skills = data.allSkillsJson.nodes;
+  // Ordena por años de experiencia (mayor a menor) para que lo más relevante aparezca primero.
+  const skills = [...data.allSkillsJson.nodes].sort((a, b) => {
+    const aYears = parseYears(a.experience) || 0;
+    const bYears = parseYears(b.experience) || 0;
+    return bYears - aYears;
+  });
+
+  const maxYears = Math.max(...skills.map(s => parseYears(s.experience) || 0), 1);
+
   const syncStatus = syncStatusFile.skills || {};
   const isSynced = syncStatus.source === 'notion';
   const lastSyncLabel =
     syncStatus && syncStatus.lastSyncedAt
       ? new Date(syncStatus.lastSyncedAt).toISOString().slice(0, 10)
-      : 'N/A';
-
-  // Variantes de color para los módulos
-  const colorVariants = ['teal', 'coral', 'neutral'];
+      : null;
 
   return (
     <section id="skills" className="w-full max-w-6xl mx-auto mt-12 px-4 font-mono scroll-mt-20">
@@ -110,79 +154,45 @@ const Skills = () => {
                 className="text-primary animate-pulse"
                 size="sm"
               />
-              SKILLS_MANIFEST
+              SKILLS
             </h2>
-            <div className="h-0.5 w-24 bg-primary mt-1" />
+            <p className="text-xs text-white/50 tracking-widest uppercase mt-2 font-mono">
+              Habilidades técnicas y tecnologías
+            </p>
+            <div className="h-0.5 w-24 bg-primary mt-2" />
           </div>
-          <div className="text-xs tracking-widest text-gray-400 uppercase font-mono">
-            System.Status:{' '}
-            <span className={isSynced ? 'text-teal font-bold' : 'text-amber-400 font-bold'}>
-              {isSynced ? 'Optimal' : 'Placeholder'}
-            </span>{' '}
-            | Notion.Sync:{' '}
-            <span className={isSynced ? 'text-teal font-bold' : 'text-amber-400 font-bold'}>
-              {isSynced ? `Active_${lastSyncLabel}` : 'Offline'}
-            </span>
+          <div className="text-xs tracking-widest text-gray-400 uppercase font-mono text-right">
+            <div>
+              Módulos:{' '}
+              <span className="text-primary font-bold">
+                {String(skills.length).padStart(2, '0')}
+              </span>
+            </div>
+            {isSynced ? (
+              <div className="mt-1">
+                <span className="text-teal font-bold">Sincronizado</span> · {lastSyncLabel}
+              </div>
+            ) : (
+              <div className="mt-1 text-amber-400 font-bold">Datos de ejemplo</div>
+            )}
           </div>
         </div>
 
         {/* Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 relative z-20">
-          {/* Core Competencies Panel - Progress Bars */}
-          <div className="border-b lg:border-b-0 lg:border-r border-white/10">
-            <div className="p-4 md:p-6 border-b border-teal/20 bg-teal/5">
-              <h3 className="font-display text-sm tracking-[0.2em] text-teal uppercase font-bold flex items-center justify-between">
-                <span className="flex items-center gap-2">
-                  <FontAwesomeIcon icon={faMicrochip} size="xs" />
-                  01_Core_Competencies
-                </span>
-                <span className="text-[10px] text-teal/60 font-normal">↕ scroll</span>
-              </h3>
-            </div>
-            <div
-              className="overflow-y-auto skills-terminal-scrollbar p-4 md:p-6 space-y-5"
-              style={{ height: '200px', maxHeight: '200px' }}
-            >
-              {skills.map((skill, index) => (
-                <SkillProgressBar key={skill.id} skill={skill} index={index} />
-              ))}
-            </div>
-          </div>
-
-          {/* Data Modules Panel - Tags */}
-          <div>
-            <div className="p-4 md:p-6 border-b border-primary/20 bg-primary/5">
-              <h3 className="font-display text-sm tracking-[0.2em] text-primary uppercase font-bold flex items-center justify-between">
-                <span className="flex items-center gap-2">
-                  <FontAwesomeIcon icon={faDatabase} size="xs" />
-                  02_Data_Modules
-                </span>
-                <span className="text-[10px] text-primary/60 font-normal">↕ scroll</span>
-              </h3>
-            </div>
-            <div
-              className="overflow-y-auto skills-terminal-scrollbar p-4 md:p-6 space-y-5 bg-black/10"
-              style={{ height: '200px', maxHeight: '200px' }}
-            >
-              {skills.map((skill, index) => (
-                <SkillTags
-                  key={skill.id}
-                  skill={skill}
-                  colorVariant={colorVariants[index % colorVariants.length]}
-                />
-              ))}
-            </div>
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 relative z-20 p-4 md:p-6">
+          {skills.map((skill, index) => (
+            <SkillCard key={skill.id} skill={skill} index={index} maxYears={maxYears} />
+          ))}
         </div>
 
         {/* Footer */}
         <div className="relative z-20 border-t border-white/20 p-3 md:p-4 bg-black/60 flex flex-col md:flex-row justify-between items-center gap-2 overflow-hidden">
           <div className="text-xs text-teal font-mono flex items-center gap-3">
             <span className="w-2 h-2 bg-teal rounded-full animate-pulse shadow-[0_0_8px_#00ff41]" />
-            ACTIVE_SESSION: SKILLS.EXE
+            {skills.length} competencias cargadas
           </div>
-          <div className="text-xs text-primary font-mono tracking-tight">
-            NOTION@SYNC:~/skills$ <span className="text-white ml-1 font-semibold">fetch --all</span>
+          <div className="text-xs text-white/50 font-mono">
+            Fuente: {isSynced ? 'Notion' : 'placeholder local'} (src/data/notion/skills.json)
           </div>
         </div>
 
