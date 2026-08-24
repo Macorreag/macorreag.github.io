@@ -82,5 +82,24 @@ exports.onPreRenderHTML = ({ getHeadComponents, replaceHeadComponents }) => {
       href: '/.well-known/ai-catalog.json',
       type: 'application/json',
     }),
+    React.createElement('link', {
+      key: 'icon-svg',
+      rel: 'icon',
+      type: 'image/svg+xml',
+      href: '/favicon.svg',
+    }),
+    React.createElement('link', {
+      key: 'icon-png',
+      rel: 'icon',
+      type: 'image/png',
+      sizes: '32x32',
+      href: '/favicon-32.png',
+    }),
+    React.createElement('link', {
+      key: 'apple-touch-icon',
+      rel: 'apple-touch-icon',
+      sizes: '180x180',
+      href: '/apple-touch-icon.png',
+    }),
   ]);
 };
