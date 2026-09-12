@@ -4,16 +4,12 @@ import {
   faNewspaper,
   faArrowUpRightFromSquare,
   faRotateRight,
-  faChevronDown,
 } from '@fortawesome/free-solid-svg-icons';
 import Post from './post';
+import { useLoadMore, LoadMoreButton } from './load-more';
 
 const CACHE_KEY = 'blog';
 const CACHE_TTL_MS = 60 * 60 * 1000;
-// Paginación simple: cuántos posts se muestran al cargar y cuántos agrega
-// cada clic en "Cargar_Más". Sube estos valores para mostrar más posts.
-const INITIAL_VISIBLE_COUNT = 4;
-const LOAD_MORE_STEP = 6;
 const MEDIUM_RSS_API =
   'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fmedium.com%2Ffeed%2F%40macorreag';
 const DEVTO_API = 'https://dev.to/api/articles?username=macorreag&per_page=30';
@@ -86,12 +82,10 @@ export default () => {
   const [status, setStatus] = useState('loading');
   const [usingCache, setUsingCache] = useState(false);
   const [failedSources, setFailedSources] = useState([]);
-  const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE_COUNT);
-
-  // Al refrescar los posts (fetch o caché) la vista vuelve a los últimos N.
-  useEffect(() => {
-    setVisibleCount(INITIAL_VISIBLE_COUNT);
-  }, [posts]);
+  const { visibleCount, remaining, canLoadMore, loadMore } = useLoadMore({
+    total: posts.length,
+    resetKey: posts,
+  });
 
   const fetchPosts = useCallback(async () => {
     setStatus('loading');
@@ -203,19 +197,13 @@ export default () => {
                   <Post key={post.link || index} element={post} index={index} />
                 ))}
               </div>
-              {posts.length > visibleCount && (
-                <div className="mt-6 flex flex-col items-center gap-2">
-                  <button
-                    onClick={() => setVisibleCount(count => count + LOAD_MORE_STEP)}
-                    className="text-xs font-mono font-bold uppercase tracking-widest text-primary hover:text-white transition-colors flex items-center gap-2 border border-primary/40 hover:border-primary px-4 py-2 hover:bg-primary/10"
-                  >
-                    <FontAwesomeIcon icon={faChevronDown} size="xs" />
-                    Cargar_Más (+{Math.min(LOAD_MORE_STEP, posts.length - visibleCount)})
-                  </button>
-                  <p className="text-[10px] text-white/30 font-mono uppercase tracking-widest">
-                    Mostrando {Math.min(visibleCount, posts.length)} de {posts.length}
-                  </p>
-                </div>
+              {canLoadMore && (
+                <LoadMoreButton
+                  remaining={remaining}
+                  onLoadMore={loadMore}
+                  shown={Math.min(visibleCount, posts.length)}
+                  total={posts.length}
+                />
               )}
               {usingCache && (
                 <p className="mt-4 text-center text-xs text-amber-400/70 font-mono uppercase tracking-widest">

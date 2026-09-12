@@ -2,6 +2,7 @@ import React from 'react';
 import { useStaticQuery, graphql } from 'gatsby';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBookOpen, faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
+import { useLoadMore, LoadMoreButton } from './load-more';
 
 export default () => {
   const data = useStaticQuery(graphql`
@@ -22,6 +23,9 @@ export default () => {
 
   const courses = data.codigofaciltoJson.data.courses || [];
   const username = data.codigofaciltoJson.data.username || 'user';
+  const { visibleCount, remaining, canLoadMore, loadMore } = useLoadMore({
+    total: courses.length,
+  });
 
   return (
     <section id="courses" className="w-full max-w-6xl mx-auto mt-12 px-4 font-mono scroll-mt-20">
@@ -50,7 +54,7 @@ export default () => {
         {/* Courses grid */}
         <div className="relative z-20 p-4 md:p-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-            {courses.map((course, index) => {
+            {courses.slice(0, visibleCount).map((course, index) => {
               const isPrimary = index % 2 === 0;
               return (
                 <div
@@ -99,6 +103,14 @@ export default () => {
               );
             })}
           </div>
+          {canLoadMore && (
+            <LoadMoreButton
+              remaining={remaining}
+              onLoadMore={loadMore}
+              shown={Math.min(visibleCount, courses.length)}
+              total={courses.length}
+            />
+          )}
         </div>
 
         {/* Footer */}

@@ -3,10 +3,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCode, faCircleDot, faRotateRight } from '@fortawesome/free-solid-svg-icons';
 import { faGithub } from '@fortawesome/free-brands-svg-icons';
 import Repo from './repo';
+import { useLoadMore, LoadMoreButton } from './load-more';
 
 const CACHE_KEY = 'repos';
 const CACHE_TTL_MS = 30 * 60 * 1000;
-const MAX_VISIBLE_REPOS = 12;
+const MAX_VISIBLE_REPOS = 30;
 const GITHUB_REPOS_API = 'https://api.github.com/users/macorreag/repos?per_page=100';
 
 const readCache = () => {
@@ -34,6 +35,10 @@ export default () => {
   const [reposCount, setReposCount] = useState(0);
   const [status, setStatus] = useState('loading');
   const [usingCache, setUsingCache] = useState(false);
+  const { visibleCount, remaining, canLoadMore, loadMore } = useLoadMore({
+    total: repos.length,
+    resetKey: repos,
+  });
 
   const fetchRepos = useCallback(async () => {
     setStatus('loading');
@@ -157,11 +162,21 @@ export default () => {
               No se pudo conectar con GitHub API. Verifica tu conexión o intenta de nuevo.
             </p>
           ) : (
-            <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-              {repos.map(repo => (
-                <Repo repo={repo} key={repo.id} />
-              ))}
-            </ul>
+            <>
+              <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                {repos.slice(0, visibleCount).map(repo => (
+                  <Repo repo={repo} key={repo.id} />
+                ))}
+              </ul>
+              {canLoadMore && (
+                <LoadMoreButton
+                  remaining={remaining}
+                  onLoadMore={loadMore}
+                  shown={Math.min(visibleCount, repos.length)}
+                  total={repos.length}
+                />
+              )}
+            </>
           )}
         </div>
 

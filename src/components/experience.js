@@ -3,6 +3,7 @@ import { useStaticQuery, graphql } from 'gatsby';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBriefcase, faBolt, faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import syncStatusFile from '../data/notion/sync-status.json';
+import { useLoadMore, LoadMoreButton } from './load-more';
 
 const formatDate = dateStr => {
   if (!dateStr) return 'Presente';
@@ -214,6 +215,9 @@ const Experience = () => {
   const experiences = [...data.allExperienceJson.nodes].sort(
     (a, b) => new Date(b.fechaInicio || 0) - new Date(a.fechaInicio || 0),
   );
+  const { visibleCount, remaining, canLoadMore, loadMore } = useLoadMore({
+    total: experiences.length,
+  });
   const syncStatus = syncStatusFile.experience || {};
   const isSynced = syncStatus.source === 'notion';
   const lastSyncLabel =
@@ -303,7 +307,7 @@ const Experience = () => {
           />
 
           <div className="space-y-10 md:space-y-14">
-            {experiences.map((item, index) => (
+            {experiences.slice(0, visibleCount).map((item, index) => (
               <ExperienceItem
                 key={item.id}
                 item={item}
@@ -313,6 +317,14 @@ const Experience = () => {
               />
             ))}
           </div>
+          {canLoadMore && (
+            <LoadMoreButton
+              remaining={remaining}
+              onLoadMore={loadMore}
+              shown={Math.min(visibleCount, experiences.length)}
+              total={experiences.length}
+            />
+          )}
         </div>
 
         {/* Footer */}

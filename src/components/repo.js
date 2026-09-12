@@ -2,7 +2,7 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
 
-export default props => (
+const Repo = props => (
   <li
     className="flex flex-col gap-2 p-4 border border-white/10 hover:border-teal/50 hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(0,255,65,0.08)] transition duration-200"
     style={{ backgroundColor: 'rgba(0,204,102,0.03)' }}
@@ -29,3 +29,7 @@ export default props => (
     )}
   </li>
 );
+
+// Memo: al desplegar más repos con "Cargar_Más", las tarjetas ya montadas
+// no se vuelven a renderizar.
+export default React.memo(Repo);

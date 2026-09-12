@@ -2,7 +2,7 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
 
-export default ({ element, index }) => {
+const Post = ({ element, index }) => {
   const post = element;
   const isPrimary = index % 2 === 0;
   const isDev = post.source === 'DEV';
@@ -20,6 +20,8 @@ export default ({ element, index }) => {
           <img
             src={post.thumbnail}
             alt={post.title}
+            loading="lazy"
+            decoding="async"
             className="w-full h-full object-cover opacity-60 hover:opacity-90 transition-opacity"
           />
         </div>
@@ -57,3 +59,7 @@ export default ({ element, index }) => {
     </div>
   );
 };
+
+// Memo: al desplegar más posts con "Cargar_Más", las tarjetas ya montadas
+// no se vuelven a renderizar.
+export default React.memo(Post);

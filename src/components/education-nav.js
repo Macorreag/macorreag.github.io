@@ -2,6 +2,7 @@ import React from 'react';
 import { useStaticQuery, graphql, Link } from 'gatsby';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGraduationCap, faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { useLoadMore, LoadMoreButton } from './load-more';
 
 export default props => {
   const data = useStaticQuery(graphql`
@@ -19,6 +20,9 @@ export default props => {
   `);
 
   const educationItems = data.allEducationJson.edges;
+  const { visibleCount, remaining, canLoadMore, loadMore } = useLoadMore({
+    total: educationItems.length,
+  });
 
   return (
     <section id="formation" className="w-full max-w-6xl mx-auto mt-12 px-4 font-mono scroll-mt-20">
@@ -51,7 +55,7 @@ export default props => {
         {/* Cards grid */}
         <div className="relative z-20 p-4 md:p-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-            {educationItems.map((element, index) => {
+            {educationItems.slice(0, visibleCount).map((element, index) => {
               const { node } = element;
               const isPrimary = index % 2 === 0;
               return (
@@ -90,6 +94,14 @@ export default props => {
               );
             })}
           </div>
+          {canLoadMore && (
+            <LoadMoreButton
+              remaining={remaining}
+              onLoadMore={loadMore}
+              shown={Math.min(visibleCount, educationItems.length)}
+              total={educationItems.length}
+            />
+          )}
         </div>
 
         {/* Footer */}

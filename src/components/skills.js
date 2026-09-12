@@ -3,6 +3,7 @@ import { useStaticQuery, graphql } from 'gatsby';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMicrochip, faLayerGroup } from '@fortawesome/free-solid-svg-icons';
 import syncStatusFile from '../data/notion/sync-status.json';
+import { useLoadMore, LoadMoreButton } from './load-more';
 
 // Agrupa las habilidades por su categoría (campo "skills" de Notion).
 // El texto útil puede venir en "title" o en "description" según el esquema:
@@ -54,6 +55,9 @@ const Skills = () => {
 
   const categories = groupByCategory(data.allSkillsJson.nodes);
   const totalSkills = categories.reduce((sum, c) => sum + c.items.length, 0);
+  const { visibleCount, remaining, canLoadMore, loadMore } = useLoadMore({
+    total: categories.length,
+  });
 
   const syncStatus = syncStatusFile.skills || {};
   const isSynced = syncStatus.source === 'notion';
@@ -101,59 +105,69 @@ const Skills = () => {
         </div>
 
         {/* Categorías */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 relative z-20 p-4 md:p-6">
-          {categories.map((group, index) => {
-            const isPrimary = index % 2 === 0;
-            const accentText = isPrimary ? 'text-primary' : 'text-teal';
-            const accentBorder = isPrimary ? 'border-primary/40' : 'border-teal/40';
-            const accentBg = isPrimary ? 'bg-primary/10' : 'bg-teal/10';
+        <div className="relative z-20 p-4 md:p-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {categories.slice(0, visibleCount).map((group, index) => {
+              const isPrimary = index % 2 === 0;
+              const accentText = isPrimary ? 'text-primary' : 'text-teal';
+              const accentBorder = isPrimary ? 'border-primary/40' : 'border-teal/40';
+              const accentBg = isPrimary ? 'bg-primary/10' : 'bg-teal/10';
 
-            return (
-              <div
-                key={group.category}
-                className="bg-black/20 border border-white/10 rounded-sm p-5"
-                style={{
-                  background:
-                    'linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0))',
-                }}
-              >
-                <div className="flex items-center justify-between gap-3 mb-4">
-                  <h3 className="font-display text-sm md:text-base font-bold text-white uppercase tracking-widest flex items-center gap-2">
-                    <FontAwesomeIcon
-                      icon={faLayerGroup}
-                      className={accentText}
-                      size="xs"
-                      aria-hidden="true"
-                    />
-                    {group.category}
-                  </h3>
-                  <span
-                    className={`shrink-0 text-xs font-bold font-mono px-2 py-0.5 border rounded-sm ${accentText} ${accentBorder} ${accentBg}`}
-                  >
-                    {String(group.items.length).padStart(2, '0')}
-                  </span>
+              return (
+                <div
+                  key={group.category}
+                  className="bg-black/20 border border-white/10 rounded-sm p-5"
+                  style={{
+                    background:
+                      'linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0))',
+                  }}
+                >
+                  <div className="flex items-center justify-between gap-3 mb-4">
+                    <h3 className="font-display text-sm md:text-base font-bold text-white uppercase tracking-widest flex items-center gap-2">
+                      <FontAwesomeIcon
+                        icon={faLayerGroup}
+                        className={accentText}
+                        size="xs"
+                        aria-hidden="true"
+                      />
+                      {group.category}
+                    </h3>
+                    <span
+                      className={`shrink-0 text-xs font-bold font-mono px-2 py-0.5 border rounded-sm ${accentText} ${accentBorder} ${accentBg}`}
+                    >
+                      {String(group.items.length).padStart(2, '0')}
+                    </span>
+                  </div>
+
+                  <ul className="space-y-1.5">
+                    {group.items.map(item => (
+                      <li key={item.name} className="text-sm leading-snug">
+                        <span className="text-white/85">
+                          <span className={`mr-2 ${accentText}`} aria-hidden="true">
+                            ▸
+                          </span>
+                          {item.name}
+                        </span>
+                        {item.detail && (
+                          <span className="block pl-5 text-xs text-white/45 mt-0.5 leading-relaxed">
+                            {item.detail}
+                          </span>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-
-                <ul className="space-y-1.5">
-                  {group.items.map(item => (
-                    <li key={item.name} className="text-sm leading-snug">
-                      <span className="text-white/85">
-                        <span className={`mr-2 ${accentText}`} aria-hidden="true">
-                          ▸
-                        </span>
-                        {item.name}
-                      </span>
-                      {item.detail && (
-                        <span className="block pl-5 text-xs text-white/45 mt-0.5 leading-relaxed">
-                          {item.detail}
-                        </span>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
+          {canLoadMore && (
+            <LoadMoreButton
+              remaining={remaining}
+              onLoadMore={loadMore}
+              shown={Math.min(visibleCount, categories.length)}
+              total={categories.length}
+            />
+          )}
         </div>
 
         {/* Footer */}
