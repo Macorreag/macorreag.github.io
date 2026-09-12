@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'gatsby';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faXmark, faTerminal } from '@fortawesome/free-solid-svg-icons';
 import useAvatarDock from '../hooks/useAvatarDock';
@@ -25,7 +26,14 @@ const scrollToSection = id => {
   if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
 };
 
-export default () => {
+/**
+ * variant="home"      → enlaces ancla a secciones de la landing (por defecto).
+ * variant="education" → (páginas /presencial, /on-line, /others) los enlaces
+ * viajan por routing cliente de Gatsby a la landing con hash (#sección),
+ * sin recargar toda la página.
+ */
+export default ({ variant = 'home' } = {}) => {
+  const isHome = variant !== 'education';
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeId, setActiveId] = useState('top');
@@ -78,6 +86,48 @@ export default () => {
     scrollToSection(id);
   };
 
+  const goHome = e => {
+    e.preventDefault();
+    setMenuOpen(false);
+    if (isHome) {
+      scrollToSection('top');
+    } else if (typeof window !== 'undefined' && typeof window.___navigate === 'function') {
+      window.___navigate('/');
+    } else {
+      window.location.assign('/');
+    }
+  };
+
+  const itemHref = item => (item.id === 'top' ? '/' : `/#${item.id}`);
+
+  const renderNavLink = (item, className, children) => {
+    if (isHome && item.id !== 'top') {
+      return (
+        <a
+          href={`#${item.id}`}
+          onClick={e => {
+            e.preventDefault();
+            handleNav(item.id);
+          }}
+          aria-current={activeId === item.id ? 'true' : undefined}
+          className={className}
+        >
+          {children}
+        </a>
+      );
+    }
+    return (
+      <Link
+        to={itemHref(item)}
+        onClick={() => setMenuOpen(false)}
+        aria-current={activeId === item.id ? 'true' : undefined}
+        className={className}
+      >
+        {children}
+      </Link>
+    );
+  };
+
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 font-mono transition-colors duration-200 border-b ${
@@ -117,50 +167,62 @@ export default () => {
               loading="lazy"
             />
           </div>
-          <a
-            href="#top"
-            onClick={e => {
-              e.preventDefault();
-              handleNav('top');
-            }}
-            className="flex items-center gap-2 text-primary font-bold tracking-[0.2em] text-sm hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 rounded-sm px-1 py-0.5"
-          >
-            <FontAwesomeIcon
-              icon={faTerminal}
-              className="text-primary"
-              size="xs"
-              aria-hidden="true"
-            />
-            MILLER_CORREA
-            <span className="hidden sm:inline text-teal/60 font-normal text-xs tracking-widest">
-              @portfolio
-            </span>
-          </a>
+          {isHome ? (
+            <a
+              href="#top"
+              onClick={goHome}
+              className="flex items-center gap-2 text-primary font-bold tracking-[0.2em] text-sm hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 rounded-sm px-1 py-0.5"
+            >
+              <FontAwesomeIcon
+                icon={faTerminal}
+                className="text-primary"
+                size="xs"
+                aria-hidden="true"
+              />
+              MILLER_CORREA
+              <span className="hidden sm:inline text-teal/60 font-normal text-xs tracking-widest">
+                @portfolio
+              </span>
+            </a>
+          ) : (
+            <Link
+              to="/"
+              onClick={goHome}
+              className="flex items-center gap-2 text-primary font-bold tracking-[0.2em] text-sm hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 rounded-sm px-1 py-0.5"
+            >
+              <FontAwesomeIcon
+                icon={faTerminal}
+                className="text-primary"
+                size="xs"
+                aria-hidden="true"
+              />
+              MILLER_CORREA
+              <span className="hidden sm:inline text-teal/60 font-normal text-xs tracking-widest">
+                @portfolio
+              </span>
+            </Link>
+          )}
         </div>
 
         {/* Desktop links */}
         <ul className="hidden md:flex items-center gap-1">
           {NAV_ITEMS.map(item => (
             <li key={item.id}>
-              <a
-                href={`#${item.id}`}
-                onClick={e => {
-                  e.preventDefault();
-                  handleNav(item.id);
-                }}
-                aria-current={activeId === item.id ? 'true' : undefined}
-                className={`relative px-3 py-2 text-xs uppercase tracking-widest font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 rounded-sm group ${
+              {renderNavLink(
+                item,
+                `relative px-3 py-2 text-xs uppercase tracking-widest font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 rounded-sm group ${
                   activeId === item.id ? 'text-primary' : 'text-white/60 hover:text-white'
-                }`}
-              >
-                {activeId === item.id && (
-                  <span className="absolute left-3 right-3 -bottom-0.5 h-px bg-primary shadow-[0_0_8px_#00ff41]" />
-                )}
-                <span className="hidden lg:inline text-primary/40 mr-1 text-[9px]">
-                  {String(NAV_ITEMS.indexOf(item) + 1).padStart(2, '0')}_
-                </span>
-                {item.label}
-              </a>
+                }`,
+                <>
+                  {activeId === item.id && (
+                    <span className="absolute left-3 right-3 -bottom-0.5 h-px bg-primary shadow-[0_0_8px_#00ff41]" />
+                  )}
+                  <span className="hidden lg:inline text-primary/40 mr-1 text-[9px]">
+                    {String(NAV_ITEMS.indexOf(item) + 1).padStart(2, '0')}_
+                  </span>
+                  {item.label}
+                </>,
+              )}
             </li>
           ))}
         </ul>
@@ -188,21 +250,15 @@ export default () => {
           <ul className="px-4 py-3 flex flex-col gap-1">
             {NAV_ITEMS.map(item => (
               <li key={item.id}>
-                <a
-                  href={`#${item.id}`}
-                  onClick={e => {
-                    e.preventDefault();
-                    handleNav(item.id);
-                  }}
-                  aria-current={activeId === item.id ? 'true' : undefined}
-                  className={`block px-3 py-2.5 text-sm uppercase tracking-widest font-bold border-l-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 ${
+                {renderNavLink(
+                  item,
+                  `block px-3 py-2.5 text-sm uppercase tracking-widest font-bold border-l-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 ${
                     activeId === item.id
                       ? 'text-primary border-primary bg-primary/5'
                       : 'text-white/60 border-transparent hover:text-white hover:border-white/20'
-                  }`}
-                >
-                  {item.label}
-                </a>
+                  }`,
+                  item.label,
+                )}
               </li>
             ))}
           </ul>

@@ -14,7 +14,7 @@ export default props => {
       <a href="#education-content" className="skip-link">
         Saltar al contenido
       </a>
-      <Nav />
+      <Nav variant="education" />
       <main id="education-content">
         {/* Header */}
         <div className="w-full max-w-6xl mx-auto mt-24 px-4">
