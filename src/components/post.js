@@ -5,6 +5,7 @@ import { faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
 export default ({ element, index }) => {
   const post = element;
   const isPrimary = index % 2 === 0;
+  const isDev = post.source === 'DEV';
 
   return (
     <div
@@ -24,6 +25,18 @@ export default ({ element, index }) => {
         </div>
       )}
       <div className="p-4 flex flex-col flex-1">
+        {post.source && (
+          <span
+            className="self-start inline-block text-[10px] font-mono font-bold uppercase tracking-widest px-2 py-0.5 mb-2 border"
+            style={{
+              color: isDev ? '#00ff41' : '#00cc66',
+              borderColor: isDev ? 'rgba(0,255,65,0.4)' : 'rgba(0,204,102,0.4)',
+              backgroundColor: isDev ? 'rgba(0,255,65,0.06)' : 'rgba(0,204,102,0.06)',
+            }}
+          >
+            {post.source}
+          </span>
+        )}
         <h4 className="font-bold font-mono text-white text-sm leading-snug mb-3 line-clamp-3">
           {post.title}
         </h4>

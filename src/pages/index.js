@@ -8,7 +8,7 @@ import ScrollIndicator from '../components/scroll-indicator';
 import Reveal from '../components/reveal';
 import Repos from '../components/repos';
 import Codigofacilito from '../components/codigofacilito';
-import Medium from '../components/medium';
+import Blog from '../components/blog';
 import EdNav from '../components/education-nav';
 import Skills from '../components/skills';
 import Experience from '../components/experience';
@@ -37,7 +37,7 @@ export default () => (
         <Codigofacilito />
       </Reveal>
       <Reveal delay={80}>
-        <Medium />
+        <Blog />
       </Reveal>
     </main>
     <FlyingAvatar />
