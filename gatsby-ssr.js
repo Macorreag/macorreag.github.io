@@ -44,12 +44,13 @@ const webmcpScript = `
 })();
 `;
 
-// Transición sutil de entrada por página (misma clase que aplica
-// wrapPageElement en gatsby-browser.js; el CSS va en el head desde SSR).
+// Transición sutil de entrada por página, 100% CSS (sin wrapper ni APIs de
+// React): la raíz de la página (#___gatsby > div > div) se recrea en cada
+// cambio de ruta, así la animación se repite en cada navegación.
 const pageFadeCss =
-  '.mcp-page-fade{animation:mcpPageFade .32s ease both}' +
   '@keyframes mcpPageFade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}' +
-  '@media (prefers-reduced-motion:reduce){.mcp-page-fade{animation:none}}';
+  '#___gatsby>div>div{animation:mcpPageFade .3s ease both}' +
+  '@media (prefers-reduced-motion:reduce){#___gatsby>div>div{animation:none}}';
 
 // Copiloto de IA (M.C.) — lanzador servido por el Worker del MCP del portafolio.
 exports.onRenderBody = ({ setHeadComponents, setPostBodyComponents }) => {
@@ -73,15 +74,6 @@ exports.onRenderBody = ({ setHeadComponents, setPostBodyComponents }) => {
     }),
   ]);
 };
-
-// Transición de página: debe coincidir EXACTO con gatsby-browser.js para
-// que la hidratación no encuentre diferencias.
-exports.wrapPageElement = ({ element, props }) =>
-  React.createElement(
-    'div',
-    { key: props.location.pathname, className: 'mcp-page-fade' },
-    element,
-  );
 
 exports.onPreRenderHTML = ({ getHeadComponents, replaceHeadComponents }) => {
   const headComponents = getHeadComponents();

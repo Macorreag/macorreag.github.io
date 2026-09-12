@@ -2,6 +2,9 @@ import './src/styles/global.css';
 import './src/styles/personalization.css';
 
 // ---- Navegación fluida entre páginas (landing <-> /presencial /on-line /others)
+// Sin JSX ni APIs de React aquí: este archivo corre antes del montaje y un
+// error suyo tumba TODO el runtime cliente.
+//
 // Al llegar a una ruta con hash (#sección), scroll suave al elemento con
 // reintentos cortos mientras las animaciones Reveal terminan de montar.
 const prefersReducedMotion = () =>
@@ -9,17 +12,18 @@ const prefersReducedMotion = () =>
   window.matchMedia &&
   window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-export const onRouteUpdate = ({ location }, pluginOptions = {}) => {
+export const onRouteUpdate = ({ location }) => {
   if (!location.hash || location.hash.length < 2) return undefined;
-  const offset = typeof pluginOptions.offset === 'number' ? pluginOptions.offset : 0;
   const id = decodeURIComponent(location.hash.slice(1));
   let tries = 0;
   let timer;
   const scroll = () => {
     const el = document.getElementById(id);
     if (el) {
-      const y = el.getBoundingClientRect().top + window.pageYOffset - offset;
-      window.scrollTo({ top: y, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
+      el.scrollIntoView({
+        behavior: prefersReducedMotion() ? 'auto' : 'smooth',
+        block: 'start',
+      });
       return;
     }
     if (tries++ < 10) timer = setTimeout(scroll, 100);
@@ -34,10 +38,3 @@ export const shouldUpdateScroll = ({ routerProps: { location } }) => {
   if (location.hash && location.hash.length > 1) return false;
   return true;
 };
-
-// Transición sutil de entrada en cada cambio de página (sin dependencias).
-export const wrapPageElement = ({ element, props }) => (
-  <div key={props.location.pathname} className="mcp-page-fade">
-    {element}
-  </div>
-);
