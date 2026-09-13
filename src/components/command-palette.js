@@ -394,37 +394,28 @@ const rank = (commands, query) => {
 
 // ── UI ──────────────────────────────────────────────────────────────────────
 
-export const CommandPaletteTrigger = ({ className = '' }) => {
-  const [hint, setHint] = useState('Ctrl K');
-
-  useEffect(() => {
-    const platform = (navigator.platform || navigator.userAgent || '').toLowerCase();
-    if (platform.includes('mac')) setHint('\u2318K');
-  }, []);
-
-  return (
-    <button
-      type="button"
-      onClick={() => window.dispatchEvent(new CustomEvent(OPEN_EVENT))}
-      aria-keyshortcuts="Control+K Meta+K"
-      className={
-        'flex items-center gap-2 text-white/60 hover:text-primary border border-white/15 hover:border-primary/50 px-2.5 py-1.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 rounded-sm ' +
-        className
-      }
-    >
-      <FontAwesomeIcon icon={faMagnifyingGlass} size="xs" aria-hidden="true" />
-      {/* El texto y la tecla solo aparecen cuando hay sitio de sobra: en md/lg el
-          nav ya va justo de ancho con sus 7 enlaces, así que ahí queda el icono. */}
-      <span className="hidden xl:inline text-[11px] font-bold uppercase tracking-widest">
-        Buscar
-      </span>
-      <kbd className="hidden xl:inline text-[10px] font-mono border border-white/20 px-1.5 py-0.5 rounded-sm text-white/45">
-        {hint}
-      </kbd>
-      <span className="sr-only">Abrir la paleta de comandos</span>
-    </button>
-  );
-};
+export const CommandPaletteTrigger = ({ className = '' }) => (
+  <button
+    type="button"
+    onClick={() => window.dispatchEvent(new CustomEvent(OPEN_EVENT))}
+    aria-keyshortcuts="/"
+    className={
+      'flex items-center gap-2 text-white/60 hover:text-primary border border-white/15 hover:border-primary/50 px-2.5 py-1.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 rounded-sm ' +
+      className
+    }
+  >
+    <FontAwesomeIcon icon={faMagnifyingGlass} size="xs" aria-hidden="true" />
+    {/* El texto y la tecla solo aparecen cuando hay sitio de sobra: en md/lg el
+        nav ya va justo de ancho con sus 7 enlaces, así que ahí queda el icono. */}
+    <span className="hidden xl:inline text-[11px] font-bold uppercase tracking-widest">
+      Buscar
+    </span>
+    <kbd className="hidden xl:inline text-[10px] font-mono border border-white/20 px-1.5 py-0.5 rounded-sm text-white/45">
+      /
+    </kbd>
+    <span className="sr-only">Abrir la paleta de comandos</span>
+  </button>
+);
 
 export default function CommandPalette() {
   const [open, setOpen] = useState(false);
@@ -457,27 +448,42 @@ export default function CommandPalette() {
     setOpen(true);
   }, []);
 
-  // Atajo global. Ctrl+K lo usa el navegador para su barra de búsqueda, así que
-  // hay que interceptarlo antes de que lo haga él.
+  // Atajo global: "/" abre la paleta, como en GitHub o GitLab.
+  //
+  // NO se usa Ctrl/Cmd+K a propósito. En Chrome para Windows y Linux esa
+  // combinación está reservada por el navegador para buscar en la barra de
+  // direcciones y no se puede interceptar de forma fiable: el navegador gana y
+  // la paleta no abre. Además es un atajo con dueño, y pisarlo molesta. "/" no
+  // choca con nada, se pulsa con una sola tecla y es la convención de la web.
   useEffect(() => {
+    const isTypingTarget = target => {
+      if (!target || !target.tagName) return false;
+      if (target.isContentEditable === true) return true;
+      const tag = target.tagName.toLowerCase();
+      return tag === 'input' || tag === 'textarea' || tag === 'select';
+    };
+
     const onKeyDown = event => {
+      if (event.defaultPrevented) return;
       const isPaletteKey =
-        (event.key === 'k' || event.key === 'K') && (event.metaKey || event.ctrlKey);
-      if (isPaletteKey) {
-        event.preventDefault();
-        if (open) close();
-        else openPalette();
-      }
+        event.key === '/' && !event.metaKey && !event.ctrlKey && !event.altKey;
+      if (!isPaletteKey) return;
+      // Con la paleta abierta, "/" debe escribirse en el buscador, no reabrirla.
+      if (open || isTypingTarget(event.target)) return;
+      event.preventDefault();
+      openPalette();
     };
     const onOpenEvent = () => openPalette();
 
-    document.addEventListener('keydown', onKeyDown);
+    // En fase de captura: ningún otro handler de la página puede quedarse antes
+    // con el evento y dejar el atajo muerto.
+    document.addEventListener('keydown', onKeyDown, true);
     window.addEventListener(OPEN_EVENT, onOpenEvent);
     return () => {
-      document.removeEventListener('keydown', onKeyDown);
+      document.removeEventListener('keydown', onKeyDown, true);
       window.removeEventListener(OPEN_EVENT, onOpenEvent);
     };
-  }, [open, close, openPalette]);
+  }, [open, openPalette]);
 
   // Bloqueo del scroll de fondo mientras la paleta está abierta.
   useEffect(() => {

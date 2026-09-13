@@ -109,7 +109,7 @@ mensaje de cada visitante**.
 
 ```
 Tier 0 · Determinista      0 Neuronas · 0 ms   ← debe cubrir ~60% de las interacciones
-  ├─ Paleta Ctrl+K (keywords + sinónimos + query params)
+  ├─ Paleta (tecla `/`) (keywords + sinónimos + query params)
   ├─ Chips del copiloto → respuesta precalculada en el BUILD
   └─ Deep links con estado en la URL
 Tier 1 · Caché             0 Neuronas · ~5 ms
@@ -219,7 +219,7 @@ Mínimo viable, todo gratis:
 
 ### ✅ Suben de prioridad (barato, rápido, gratis)
 
-**A. Paleta de comandos `Ctrl+K` — determinista, sin backend.** *(era #3)*
+**A. Paleta de comandos (tecla `/`) — determinista, sin backend.** *(era #3)*
 Ahora es **la idea #1**. Cero Neuronas, cero latencia, cero infraestructura, y es la que
 más "se siente" agéntica. El LLM queda como fallback para lo ambiguo. Además aísla el
 sitio de una caída del Worker.
@@ -297,7 +297,7 @@ y añade coste. Resalta y filtra, no reordenes.
 | 3 | Truncar historial + `max_tokens: 200` | S | Petición bomba ×49 más barata | ✅ |
 | 4 | Rate limit + `Origin` check + preflight | S/M | El copiloto no se cae para todos | ✅ |
 | 5 | Canary de claves en CI | S | Red de seguridad de secretos | ✅ |
-| 6 | Paleta `Ctrl+K` determinista | M | 0 Neuronas, 0 ms | ✅ |
+| 6 | Paleta (tecla `/`) determinista | M | 0 Neuronas, 0 ms | ✅ |
 | 7 | `portfolio.json` canónico + build-time | M | Consistencia + precalculado | siguiente |
 | 8 | Chips del copiloto precalculados en KV | S | El clic más común pasa a gratis | — |
 | 9 | `tools.ts` unificado + tool-calling | L | El chat por fin *actúa* | — |
@@ -338,6 +338,18 @@ precalculados). La **9** (tool-calling) va después: encarece cada turno, así q
 conviene tener el Tier 0 cubriendo lo que pueda cubrir.
 
 ### Paleta de comandos: qué es y qué no
+
+**La tecla es `/`, no `Ctrl/Cmd+K`.** No es una preferencia estética: en Chrome para
+Windows y Linux, `Ctrl+K` está reservado por el navegador para buscar en la barra de
+direcciones y **el navegador gana** — la paleta no abre. Es un problema documentado y sin
+solución fiable ([dip/cmdk#288](https://github.com/dip/cmdk/issues/288),
+[PostHog#1866](https://github.com/PostHog/posthog/issues/1866)). Además `Ctrl+K` es un
+atajo con dueño: pisarlo molesta aunque llegara a funcionar. `/` se pulsa con una sola
+tecla, no choca con nada y es la convención de la web para esto (GitHub, GitLab).
+
+Con la paleta abierta, `/` se escribe en el buscador en vez de reabrirla, y el atajo se
+ignora si el foco está en un campo de texto. El listener va en fase de **captura** para que
+ningún otro handler pueda quedarse antes con el evento.
 
 Implementada en `src/components/command-palette.js`, montada desde el `Nav` para que
 exista en todas las páginas. **No usa ningún LLM ni hace ninguna petición**: todo sale de
