@@ -297,7 +297,7 @@ y añade coste. Resalta y filtra, no reordenes.
 | 3 | Truncar historial + `max_tokens: 200` | S | Petición bomba ×49 más barata | ✅ |
 | 4 | Rate limit + `Origin` check + preflight | S/M | El copiloto no se cae para todos | ✅ |
 | 5 | Canary de claves en CI | S | Red de seguridad de secretos | ✅ |
-| 6 | Paleta (tecla `/`) determinista | M | 0 Neuronas, 0 ms | ✅ |
+| 6 | Paleta (tecla `/`) + router de IA | M | 0 Neuronas en el caso normal; 1,16 en el fallback | ✅ |
 | 7 | `portfolio.json` canónico + build-time | M | Consistencia + precalculado | siguiente |
 | 8 | Chips del copiloto precalculados en KV | S | El clic más común pasa a gratis | — |
 | 9 | `tools.ts` unificado + tool-calling | L | El chat por fin *actúa* | — |
@@ -365,10 +365,52 @@ repos en vivo o reflejar el estado en la URL. Ahora mismo abre el repo en GitHub
 siguiente paso natural es que el comando filtre la sección en la página y deje
 `?lang=Python` en la barra de direcciones, para que el enlace sea compartible.
 
-Verificación disponible sin navegador: `node .diff-tmp/test-command-palette.mjs` (31
+Verificación disponible sin navegador: `node .diff-tmp/test-command-palette.mjs` (35
 comprobaciones), que incluye la lógica de búsqueda ejecutada desde el archivo real y —lo
 más importante— que cada `id` de sección que declara la paleta **exista de verdad** en el
 DOM. Un typo ahí no rompe el build: el comando simplemente no haría nada al pulsarlo.
+
+### El Tier 2 ya existe: la paleta entiende lenguaje natural
+
+Cuando la búsqueda determinista no encuentra nada, la paleta consulta `POST /api/route`.
+El modelo **no redacta una respuesta: elige uno de los comandos que ya existen**. Esa
+restricción es lo que lo hace barato y seguro a la vez:
+
+- No puede inventarse un comando: devuelve un id que ya venía en la petición, y el Worker
+  lo valida contra esa misma lista. Si devuelve otra cosa —una frase, un id inventado, un
+  bloque de razonamiento— la respuesta es `null` y la paleta enseña su estado vacío.
+- La salida son ~6 tokens en vez de los ~200 de una respuesta redactada.
+- La acción la ejecuta el cliente con código real.
+
+**Coste medido: 1,16 Neuronas por routing (~8.600 al día gratis)**, frente a las 11,9 de
+un turno de chat. Y solo se dispara como *fallback*, con debounce de 400 ms, caché de
+sesión (repetir una búsqueda no vuelve a gastar) y timeout propio. Si el Worker está
+caído, la paleta funciona igual con su búsqueda determinista.
+
+**Precisión medida en producción: 6/6** consultas en lenguaje natural, con 0 varianza en
+3 intentos cada una. Las consultas fuera de alcance («cuánto cuesta una casa en Bogotá»,
+«jkljkl zzz») devuelven «ninguno» — el router no inventa relaciones que no existen.
+
+Dos cosas que costaron encontrar y están en el código como comentarios:
+
+1. **El prompt necesita el subtítulo y las palabras clave.** Solo con `id | título`, un
+   comando titulado «Posts» no se asocia a la palabra «artículo».
+2. **El Worker prefiltra a 10 candidatos** por solapamiento de palabras antes de
+   preguntar. Con 15 opciones y una frase larga el modelo dudaba y respondía `none`;
+   «muestrame su ultimo articulo» acertaba con 2 comandos y fallaba con 12. El prefiltro
+   bajó el coste de 2,6 a 1,16 Neuronas y arregló el caso.
+
+> **Lección de método.** Un parche mío borró del prompt la lista de comandos y la
+> consulta: el modelo recibía tres frases pidiéndole elegir de una lista vacía y
+> respondía `none`… con toda la razón. Diagnosticarlo a ciegas costó varios ciclos,
+> porque `{id:null}` es indistinguible de un «ningún comando encaja» legítimo. Se
+> resolvió añadiendo un campo opcional `diagnostics` que devuelve el prompt y la salida
+> cruda. Y se activó `noUnusedLocals` en `tsconfig.json`: la variable `list` se calculaba
+> y no se usaba, y ese fallo habría sido un error de compilación.
+>
+> Corolario operativo: **tras cada cambio en `router.ts` hay que correr
+> `node .diff-tmp/test-router.mjs`**. El test ya cubría este caso; simplemente no se
+> ejecutó.
 
 ---
 
