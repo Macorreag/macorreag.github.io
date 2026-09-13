@@ -49,6 +49,14 @@ jobs:
           NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
           NOTION_EXPERIENCE_DATABASE_ID: ${{ secrets.NOTION_EXPERIENCE_DATABASE_ID }}
 
+      # gatsby build NO limpia public/: deja los bundles de builds anteriores, que
+      # se publican igual aunque ya nadie los referencie. Y hay un problema peor:
+      # el guard de credenciales escanea public/ completo, así que un bundle viejo
+      # con una clave haría fallar el deploy para siempre, incluso después de
+      # arreglar el código. Limpiar antes de construir evita las dos cosas.
+      - name: Clean previous build output
+        run: npx gatsby clean
+
       - name: Build Gatsby site
         run: npm run build
         env:
