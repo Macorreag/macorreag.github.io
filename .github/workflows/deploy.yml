@@ -55,6 +55,27 @@ jobs:
           GATSBY_TELEMETRY_DISABLED: 1
           NODE_OPTIONS: --openssl-legacy-provider
 
+      # Publicamos en GitHub Pages: si una credencial llega a public/, ya es pública.
+      # Este guard es la última línea de defensa antes de subir el artefacto.
+      - name: Guard — sin credenciales en el artefacto público
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          PATTERN='(sk-proj-[A-Za-z0-9_-]{20,}|sk-ant-[A-Za-z0-9_-]{20,}|sk-[A-Za-z0-9]{32,}|AIza[0-9A-Za-z_-]{35}|gsk_[A-Za-z0-9]{40,}|ghp_[A-Za-z0-9]{36}|gho_[A-Za-z0-9]{36}|github_pat_[A-Za-z0-9_]{60,}|xox[baprs]-[A-Za-z0-9-]{10,}|-----BEGIN [A-Z ]*PRIVATE KEY-----)'
+
+          if grep -rInE "$PATTERN" public/ 2>/dev/null; then
+            echo "::error::Posible credencial encontrada en public/. No se publica."
+            exit 1
+          fi
+
+          if find public \( -name '.env*' -o -name '*.pem' -o -name '*.key' \) | grep -q .; then
+            echo "::error::Archivos sensibles (.env/.pem/.key) dentro de public/."
+            exit 1
+          fi
+
+          echo "OK: sin credenciales ni archivos sensibles en public/"
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
