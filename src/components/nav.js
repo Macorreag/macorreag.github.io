@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faXmark, faTerminal } from '@fortawesome/free-solid-svg-icons';
 import useAvatarDock from '../hooks/useAvatarDock';
 import { dockAvatarEl } from '../utils/avatar-flight-refs';
+import CommandPalette, { CommandPaletteTrigger } from './command-palette';
 
 const GITHUB_AVATAR = 'https://github.com/macorreag.png';
 
@@ -204,40 +205,44 @@ export default ({ variant = 'home' } = {}) => {
           )}
         </div>
 
-        {/* Desktop links */}
-        <ul className="hidden md:flex items-center gap-1">
-          {NAV_ITEMS.map(item => (
-            <li key={item.id}>
-              {renderNavLink(
-                item,
-                `relative px-3 py-2 text-xs uppercase tracking-widest font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 rounded-sm group ${
-                  activeId === item.id ? 'text-primary' : 'text-white/60 hover:text-white'
-                }`,
-                <>
-                  {activeId === item.id && (
-                    <span className="absolute left-3 right-3 -bottom-0.5 h-px bg-primary shadow-[0_0_8px_#00ff41]" />
-                  )}
-                  <span className="hidden lg:inline text-primary/40 mr-1 text-[9px]">
-                    {String(NAV_ITEMS.indexOf(item) + 1).padStart(2, '0')}_
-                  </span>
-                  {item.label}
-                </>,
-              )}
-            </li>
-          ))}
-        </ul>
+        {/* Acciones: enlaces de escritorio + paleta de comandos + menú móvil */}
+        <div className="flex items-center gap-2 shrink-0">
+          <ul className="hidden md:flex items-center gap-1">
+            {NAV_ITEMS.map(item => (
+              <li key={item.id}>
+                {renderNavLink(
+                  item,
+                  `relative px-3 py-2 text-xs uppercase tracking-widest font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 rounded-sm group ${
+                    activeId === item.id ? 'text-primary' : 'text-white/60 hover:text-white'
+                  }`,
+                  <>
+                    {activeId === item.id && (
+                      <span className="absolute left-3 right-3 -bottom-0.5 h-px bg-primary shadow-[0_0_8px_#00ff41]" />
+                    )}
+                    <span className="hidden lg:inline text-primary/40 mr-1 text-[9px]">
+                      {String(NAV_ITEMS.indexOf(item) + 1).padStart(2, '0')}_
+                    </span>
+                    {item.label}
+                  </>,
+                )}
+              </li>
+            ))}
+          </ul>
 
-        {/* Mobile toggle */}
-        <button
-          className="md:hidden text-white/70 hover:text-primary p-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 rounded-sm"
-          onClick={() => setMenuOpen(prev => !prev)}
-          aria-expanded={menuOpen}
-          aria-controls="mobile-menu"
-          aria-label={menuOpen ? 'Cerrar menú' : 'Abrir menú'}
-          style={{ touchAction: 'manipulation' }}
-        >
-          <FontAwesomeIcon icon={menuOpen ? faXmark : faBars} size="lg" aria-hidden="true" />
-        </button>
+          <CommandPaletteTrigger />
+
+          {/* Mobile toggle */}
+          <button
+            className="md:hidden text-white/70 hover:text-primary p-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 rounded-sm"
+            onClick={() => setMenuOpen(prev => !prev)}
+            aria-expanded={menuOpen}
+            aria-controls="mobile-menu"
+            aria-label={menuOpen ? 'Cerrar menú' : 'Abrir menú'}
+            style={{ touchAction: 'manipulation' }}
+          >
+            <FontAwesomeIcon icon={menuOpen ? faXmark : faBars} size="lg" aria-hidden="true" />
+          </button>
+        </div>
       </nav>
 
       {/* Mobile menu */}
@@ -261,9 +266,14 @@ export default ({ variant = 'home' } = {}) => {
                 )}
               </li>
             ))}
+            <li className="mt-2 pt-3 border-t border-white/10">
+              <CommandPaletteTrigger className="w-full justify-center" />
+            </li>
           </ul>
         </nav>
       )}
+
+      <CommandPalette />
     </header>
   );
 };

@@ -179,3 +179,55 @@ button:focus-visible {
   background-image: linear-gradient(to right, rgba(0, 255, 65, 0.1) 1px, transparent 1px);
   background-size: 20% 100%;
 }
+
+/* ── Paleta de comandos (Ctrl/Cmd + K) ─────────────────────────────────────
+   Solo la entrada y el scroll: el resto se resuelve con utilidades de Tailwind.
+   El bloque prefers-reduced-motion de arriba ya neutraliza estas animaciones. */
+
+@keyframes mcPaletteIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes mcPaletteFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.mc-palette-panel {
+  animation: mcPaletteIn 0.16s ease-out both;
+}
+
+.mc-palette-backdrop {
+  animation: mcPaletteFade 0.16s ease-out both;
+}
+
+.mc-palette-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--matrix-green) transparent;
+  overscroll-behavior: contain;
+}
+
+.mc-palette-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.mc-palette-scroll::-webkit-scrollbar-track {
+  background: rgba(0, 255, 65, 0.05);
+  border-left: 1px solid rgba(0, 255, 65, 0.1);
+}
+
+.mc-palette-scroll::-webkit-scrollbar-thumb {
+  background: var(--matrix-green);
+  box-shadow: 0 0 10px var(--matrix-green);
+}

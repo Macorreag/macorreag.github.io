@@ -297,13 +297,13 @@ y añade coste. Resalta y filtra, no reordenes.
 | 3 | Truncar historial + `max_tokens: 200` | S | Petición bomba ×49 más barata | ✅ |
 | 4 | Rate limit + `Origin` check + preflight | S/M | El copiloto no se cae para todos | ✅ |
 | 5 | Canary de claves en CI | S | Red de seguridad de secretos | ✅ |
-| 6 | Paleta `Ctrl+K` determinista | M | 0 Neuronas, 0 ms | siguiente |
+| 6 | Paleta `Ctrl+K` determinista | M | 0 Neuronas, 0 ms | ✅ |
 | 7 | `portfolio.json` canónico + build-time | M | Consistencia + precalculado | siguiente |
 | 8 | Chips del copiloto precalculados en KV | S | El clic más común pasa a gratis | — |
 | 9 | `tools.ts` unificado + tool-calling | L | El chat por fin *actúa* | — |
 | 10 | Huecos del audit (A2A, skills, catalog) | S/M | Nivel 3-4 del scanner | — |
 
-Los puntos **1-5 están hechos y verificados**: `tsc --noEmit` limpio, tests del filtro de
+Los puntos **1-6 están hechos y verificados**: `tsc --noEmit` limpio, tests del filtro de
 razonamiento en verde (incluido el caso de etiqueta partida entre chunks) y el canary
 probado contra el build real y contra claves plantadas.
 
@@ -332,9 +332,31 @@ El resto del ciclo (deploy + smoke test) sí está automatizado en
 `.diff-tmp/deploy-wizard.sh`, que **detecta** si hay sesión y, si no la hay, se detiene y
 te dice qué comando ejecutar en lugar de intentar el login por su cuenta.
 
-Lo que sigue, en orden: **6** (paleta `Ctrl+K`, sin backend y con el mayor efecto
-percibido), **7** (fuente de verdad única, antes de añadir más funcionalidad), **10**
-(huecos del audit, baratos y de señal alta).
+Lo que sigue, en orden: **7** (fuente de verdad única, antes de añadir más
+funcionalidad), **10** (huecos del audit, baratos y de señal alta) y **8** (chips
+precalculados). La **9** (tool-calling) va después: encarece cada turno, así que primero
+conviene tener el Tier 0 cubriendo lo que pueda cubrir.
+
+### Paleta de comandos: qué es y qué no
+
+Implementada en `src/components/command-palette.js`, montada desde el `Nav` para que
+exista en todas las páginas. **No usa ningún LLM ni hace ninguna petición**: todo sale de
+datos que ya están en el bundle (secciones, páginas de formación, categorías de skills) o
+de la caché de sesión que escriben `repos.js` y `blog.js` (repos y posts ya cargados).
+Si el Worker del copiloto está caído, la paleta funciona igual.
+
+Los repos y posts solo aparecen si esas secciones ya se cargaron en la pestaña: la paleta
+no dispara peticiones propias a propósito, para no competir con la carga de la página.
+
+Lo que **no** hace todavía (es la idea #5/#6, la siguiente ola): filtrar la grilla de
+repos en vivo o reflejar el estado en la URL. Ahora mismo abre el repo en GitHub. El
+siguiente paso natural es que el comando filtre la sección en la página y deje
+`?lang=Python` en la barra de direcciones, para que el enlace sea compartible.
+
+Verificación disponible sin navegador: `node .diff-tmp/test-command-palette.mjs` (31
+comprobaciones), que incluye la lógica de búsqueda ejecutada desde el archivo real y —lo
+más importante— que cada `id` de sección que declara la paleta **exista de verdad** en el
+DOM. Un typo ahí no rompe el build: el comando simplemente no haría nada al pulsarlo.
 
 ---
 
