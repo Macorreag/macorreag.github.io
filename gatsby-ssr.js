@@ -1,5 +1,9 @@
 const React = require('react');
 
+// Origen del Worker: definido una sola vez en src/utils/worker-origin.js, para
+// que el lanzador del copiloto y el router de la paleta no puedan divergir.
+const { WORKER_ORIGIN } = require('./src/utils/worker-origin');
+
 // WebMCP — expone herramientas del sitio a agentes a través de navigator.modelContext
 // (API experimental; se registra solo si el navegador lo soporta, sin romper nada).
 const webmcpScript = `
@@ -64,7 +68,7 @@ exports.onRenderBody = ({ setHeadComponents, setPostBodyComponents }) => {
     React.createElement('script', {
       key: 'mcp-assistant',
       async: true,
-      src: 'https://macorreag-portfolio-mcp.macorreag.workers.dev/assistant.js',
+      src: WORKER_ORIGIN + '/assistant.js',
     }),
     React.createElement('script', {
       key: 'webmcp',

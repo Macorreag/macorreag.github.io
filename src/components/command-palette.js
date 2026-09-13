@@ -21,6 +21,7 @@ import skillsFile from '../data/notion/skills.json';
 import presencialFile from '../data/education/presencial.json';
 import onlineFile from '../data/education/online.json';
 import othersFile from '../data/education/others.json';
+import { WORKER_ORIGIN } from '../utils/worker-origin';
 
 /**
  * Paleta de comandos (Ctrl/Cmd + K).
@@ -47,6 +48,51 @@ const REPOS_CACHE_KEY = 'repos';
 const BLOG_CACHE_KEY = 'blog';
 const MAX_CACHED_REPOS = 25;
 const MAX_CACHED_POSTS = 12;
+
+/**
+ * Router de intención: el único punto donde la paleta usa un LLM.
+ *
+ * Se consulta SOLO cuando la búsqueda determinista no encuentra nada, así que en
+ * el caso normal no hay red ni gasto. Cuesta ~2,6 Neuronas por consulta (un
+ * turno de chat del copiloto cuesta ~11,9) y la respuesta se cachea en la
+ * sesión, de modo que repetir la misma búsqueda no vuelve a gastar cuota.
+ *
+ * El modelo no redacta nada: elige uno de los comandos que le enviamos, y el
+ * Worker valida que el id exista antes de responderlo. Si el Worker está caído
+ * o tarda demasiado, la paleta simplemente enseña su estado vacío de siempre.
+ */
+const ROUTE_URL = WORKER_ORIGIN + '/api/route';
+const ROUTE_DEBOUNCE_MS = 400;
+const ROUTE_TIMEOUT_MS = 6000;
+const ROUTE_CACHE_KEY = 'mc-palette-ai';
+const ROUTE_CACHE_MAX = 60;
+const MIN_ROUTE_CHARS = 6;
+const MAX_ROUTE_COMMANDS = 60;
+
+const readRouteCache = key => {
+  try {
+    const raw = window.sessionStorage.getItem(ROUTE_CACHE_KEY);
+    if (!raw) return undefined;
+    const map = JSON.parse(raw) || {};
+    return Object.prototype.hasOwnProperty.call(map, key) ? map[key] : undefined;
+  } catch (err) {
+    return undefined;
+  }
+};
+
+/** Guarda también los fallos (null): así no se repregunta lo que no tiene respuesta. */
+const writeRouteCache = (key, value) => {
+  try {
+    const raw = window.sessionStorage.getItem(ROUTE_CACHE_KEY);
+    const map = raw ? JSON.parse(raw) || {} : {};
+    map[key] = value;
+    const keys = Object.keys(map);
+    if (keys.length > ROUTE_CACHE_MAX) delete map[keys[0]];
+    window.sessionStorage.setItem(ROUTE_CACHE_KEY, JSON.stringify(map));
+  } catch (err) {
+    // sin caché: se seguirá preguntando
+  }
+};
 
 const prefersReducedMotion = () =>
   typeof window !== 'undefined' &&
@@ -424,10 +470,12 @@ export default function CommandPalette() {
   const [cached, setCached] = useState([]);
   const [copiedId, setCopiedId] = useState(null);
   const [mounted, setMounted] = useState(false);
+  const [ai, setAi] = useState({ status: 'idle', id: null });
 
   const inputRef = useRef(null);
   const listRef = useRef(null);
   const previousFocus = useRef(null);
+  const routeAbort = useRef(null);
 
   useEffect(() => {
     setMounted(true);
@@ -509,10 +557,103 @@ export default function CommandPalette() {
     return undefined;
   }, [open]);
 
+  const allCommands = useMemo(() => [...cached, ...BASE_COMMANDS], [cached]);
+
+  // Búsqueda determinista: instantánea, sin red y sin gastar cuota.
   const commands = useMemo(
-    () => (open ? rank([...cached, ...BASE_COMMANDS], normalize(query)) : []),
-    [open, cached, query],
+    () => (open ? rank(allCommands, normalize(query)) : []),
+    [open, allCommands, query],
   );
+
+  /**
+   * El LLM entra SOLO cuando el determinista no encontró nada y la consulta
+   * tiene pinta de frase. Antes de llamar se mira la caché de la sesión.
+   */
+  useEffect(() => {
+    const idle = prev => (prev.status === 'idle' ? prev : { status: 'idle', id: null });
+
+    if (!open) {
+      setAi(idle);
+      return undefined;
+    }
+
+    const normalized = normalize(query);
+    if (commands.length > 0 || normalized.length < MIN_ROUTE_CHARS) {
+      setAi(idle);
+      return undefined;
+    }
+
+    const cachedHit = readRouteCache(normalized);
+    if (cachedHit !== undefined) {
+      setAi(prev =>
+        prev.status === 'idle' && !prev.id
+          ? prev
+          : { status: cachedHit ? 'done' : 'empty', id: cachedHit },
+      );
+      return undefined;
+    }
+
+    setAi({ status: 'pending', id: null });
+
+    const controller = typeof AbortController === 'function' ? new AbortController() : null;
+    routeAbort.current = controller;
+
+    const timer = window.setTimeout(() => {
+      const payload = {
+        query,
+        commands: allCommands.slice(0, MAX_ROUTE_COMMANDS).map(command => ({
+          id: command.id,
+          title: command.title,
+          // El subtítulo y las palabras clave aportan el vocabulario real
+          // ("artículos", "estudios", "repositorios"). El Worker los usa para
+          // preseleccionar candidatos antes de preguntarle al modelo.
+          subtitle: command.subtitle || undefined,
+          keywords: command.keywords || undefined,
+        })),
+      };
+
+      const abortTimer = window.setTimeout(() => {
+        if (controller) controller.abort();
+      }, ROUTE_TIMEOUT_MS);
+
+      fetch(ROUTE_URL, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(payload),
+        signal: controller ? controller.signal : undefined,
+      })
+        .then(response => (response.ok ? response.json() : { id: null }))
+        .then(data => {
+          const id = data && typeof data.id === 'string' ? data.id : null;
+          writeRouteCache(normalized, id);
+          setAi({ status: id ? 'done' : 'empty', id });
+        })
+        // Nunca rompe la paleta: si el Worker falla, se queda sin sugerencia.
+        .catch(() => setAi({ status: 'empty', id: null }))
+        .then(() => window.clearTimeout(abortTimer));
+    }, ROUTE_DEBOUNCE_MS);
+
+    return () => {
+      window.clearTimeout(timer);
+      if (controller) controller.abort();
+    };
+  }, [open, query, commands, allCommands]);
+
+  /** El comando que propuso el modelo, resuelto contra la lista real. */
+  const aiCommand = useMemo(() => {
+    if (ai.status !== 'done' || !ai.id) return null;
+    const found = allCommands.find(command => command.id === ai.id);
+    return found ? { ...found, viaAI: true } : null;
+  }, [ai, allCommands]);
+
+  const shown = useMemo(() => {
+    if (!aiCommand) return commands;
+    return commands.some(command => command.id === aiCommand.id)
+      ? commands
+      : [aiCommand, ...commands];
+  }, [aiCommand, commands]);
+
+  const aiPending = ai.status === 'pending';
 
   useEffect(() => {
     setActiveIndex(0);
@@ -551,13 +692,13 @@ export default function CommandPalette() {
     }
     if (event.key === 'ArrowDown') {
       event.preventDefault();
-      setActiveIndex(index => (commands.length ? (index + 1) % commands.length : 0));
+      setActiveIndex(index => (shown.length ? (index + 1) % shown.length : 0));
       return;
     }
     if (event.key === 'ArrowUp') {
       event.preventDefault();
       setActiveIndex(index =>
-        commands.length ? (index - 1 + commands.length) % commands.length : 0,
+        shown.length ? (index - 1 + shown.length) % shown.length : 0,
       );
       return;
     }
@@ -568,12 +709,12 @@ export default function CommandPalette() {
     }
     if (event.key === 'End') {
       event.preventDefault();
-      setActiveIndex(Math.max(0, commands.length - 1));
+      setActiveIndex(Math.max(0, shown.length - 1));
       return;
     }
     if (event.key === 'Enter') {
       event.preventDefault();
-      runCommand(commands[activeIndex]);
+      runCommand(shown[activeIndex]);
       return;
     }
     // Trampa de foco: la paleta es modal y el único foco vive dentro.
@@ -586,7 +727,7 @@ export default function CommandPalette() {
   if (!mounted || !open) return null;
 
   const listId = 'mc-palette-list';
-  const activeCommand = commands[activeIndex];
+  const activeCommand = shown[activeIndex];
   const activeId = activeCommand
     ? 'mc-palette-option-' + activeCommand.id.replace(/[^a-zA-Z0-9_-]/g, '_')
     : undefined;
@@ -645,14 +786,27 @@ export default function CommandPalette() {
           aria-label="Comandos disponibles"
           className="mc-palette-scroll max-h-[52vh] overflow-y-auto py-1"
         >
-          {commands.length === 0 && (
+          {shown.length === 0 && aiPending && (
+            <li className="px-4 py-6 text-center text-white/40 text-xs" role="presentation">
+              <span className="text-primary animate-pulse" aria-hidden="true">
+                ▊
+              </span>{' '}
+              Sin coincidencias directas. Buscando con IA…
+            </li>
+          )}
+          {shown.length === 0 && !aiPending && (
             <li className="px-4 py-6 text-center text-white/40 text-xs">
               Sin resultados para «{query}». Prueba con <span className="text-primary">skills</span>,{' '}
               <span className="text-primary">react</span> o{' '}
               <span className="text-primary">correo</span>.
+              {ai.status === 'empty' && (
+                <span className="block mt-2 text-white/25">
+                  La IA tampoco encontró un comando para eso.
+                </span>
+              )}
             </li>
           )}
-          {commands.map((command, index) => {
+          {shown.map((command, index) => {
             const header = command.group !== lastGroup ? command.group : null;
             lastGroup = command.group;
             const isActive = index === activeIndex;
@@ -686,8 +840,17 @@ export default function CommandPalette() {
                     aria-hidden="true"
                   />
                   <span className="min-w-0 flex-1">
-                    <span className="block text-sm text-white truncate">
-                      {copiedId === command.id ? 'Copiado' : command.title}
+                    <span className="flex items-center gap-2">
+                      <span className="text-sm text-white truncate">
+                        {copiedId === command.id ? 'Copiado' : command.title}
+                      </span>
+                      {/* Honestidad: el usuario ve que esta sugerencia la propuso
+                          el modelo, no el buscador determinista. */}
+                      {command.viaAI && (
+                        <span className="shrink-0 text-[9px] font-bold uppercase tracking-widest text-primary border border-primary/40 bg-primary/10 px-1.5 py-0.5 rounded-sm">
+                          IA
+                        </span>
+                      )}
                     </span>
                     {command.subtitle && (
                       <span className="block text-[11px] text-white/40 truncate">
@@ -719,11 +882,11 @@ export default function CommandPalette() {
               <kbd className="font-mono border border-white/20 px-1 rounded-sm">esc</kbd> cerrar
             </span>
           </span>
-          <span>{commands.length} resultado{commands.length === 1 ? '' : 's'}</span>
+          <span>{shown.length} resultado{shown.length === 1 ? '' : 's'}</span>
         </div>
 
         <p role="status" aria-live="polite" className="sr-only">
-          {commands.length} resultados disponibles
+          {shown.length} resultados disponibles
         </p>
       </div>
     </div>
