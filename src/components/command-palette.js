@@ -15,7 +15,7 @@ import {
   faXmark,
   faArrowUpRightFromSquare,
 } from '@fortawesome/free-solid-svg-icons';
-import { faGithub, faMedium, faDev } from '@fortawesome/free-brands-svg-icons';
+import { faGithub, faMedium, faDev, faLinkedin } from '@fortawesome/free-brands-svg-icons';
 
 import skillsFile from '../data/notion/skills.json';
 import presencialFile from '../data/education/presencial.json';
@@ -39,6 +39,7 @@ export const OPEN_EVENT = 'mc:open-command-palette';
 
 const CONTACT_EMAIL = 'macorreag@unal.edu.co';
 const GITHUB_URL = 'https://github.com/macorreag';
+const LINKEDIN_URL = 'https://www.linkedin.com/in/macorreag/';
 const MEDIUM_URL = 'https://medium.com/@macorreag';
 const DEV_URL = 'https://dev.to/macorreag';
 const MAX_RESULTS = 40;
@@ -249,6 +250,7 @@ const SECTION_COMMANDS = [
   { id: 'open-source', title: 'Proyectos', subtitle: 'Repositorios en GitHub', keywords: 'repos open source codigo github proyectos' },
   { id: 'courses', title: 'Cursos', subtitle: 'Cursos de Código Facilito', keywords: 'cursos codigofacilito formacion' },
   { id: 'posts', title: 'Posts', subtitle: 'Artículos en Medium y DEV', keywords: 'blog articulos medium dev escritos' },
+  { id: 'identidad', title: 'Identidad', subtitle: 'Un handle, cuatro puertas', keywords: 'contacto tarjeta id card linkedin email como me encuentras' },
 ].map(item => ({
   id: 'section:' + item.id,
   group: 'Ir a',
@@ -314,6 +316,16 @@ const CONTACT_COMMANDS = [
     icon: faGithub,
     external: true,
     run: () => openExternal(GITHUB_URL),
+  },
+  {
+    id: 'contact:linkedin',
+    group: 'Contacto',
+    title: 'Abrir LinkedIn',
+    subtitle: 'linkedin.com/in/macorreag',
+    keywords: 'contacto perfil red profesional empleo trabajo',
+    icon: faLinkedin,
+    external: true,
+    run: () => openExternal(LINKEDIN_URL),
   },
   {
     id: 'contact:medium',

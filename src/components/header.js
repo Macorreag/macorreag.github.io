@@ -11,7 +11,13 @@ import {
   faCloudBolt,
   faUserSecret,
 } from '@fortawesome/free-solid-svg-icons';
-import { faReact, faNodeJs, faAws, faGithub } from '@fortawesome/free-brands-svg-icons';
+import {
+  faReact,
+  faNodeJs,
+  faAws,
+  faGithub,
+  faLinkedin,
+} from '@fortawesome/free-brands-svg-icons';
 
 const GITHUB_AVATAR = 'https://github.com/macorreag.png';
 const GITHUB_USER_API = 'https://api.github.com/users/macorreag';
@@ -200,7 +206,7 @@ export default () => {
               </p>
 
               <div
-                className="hero-rise flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6 mt-2"
+                className="hero-rise flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-2 sm:gap-x-6 sm:gap-y-3 mt-2"
                 style={{ animationDelay: '260ms' }}
               >
                 <a
@@ -218,6 +224,15 @@ export default () => {
                 >
                   <FontAwesomeIcon icon={faGithub} className="text-[#00FF41] text-[10px]" />{' '}
                   github.com/macorreag
+                </a>
+                <a
+                  className="flex items-center gap-2 text-xs font-medium uppercase tracking-widest text-slate-500 hover:text-[#00FF41] transition-colors"
+                  href="https://www.linkedin.com/in/macorreag/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <FontAwesomeIcon icon={faLinkedin} className="text-[#00FF41] text-[10px]" />{' '}
+                  linkedin.com/in/macorreag
                 </a>
               </div>
 

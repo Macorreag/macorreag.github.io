@@ -231,3 +231,241 @@ button:focus-visible {
   background: var(--matrix-green);
   box-shadow: 0 0 10px var(--matrix-green);
 }
+
+/* ── id.card: la tarjeta que se auto-anota ─────────────────────────────────
+   Un handle fijo en el centro; alrededor cambia el protocolo de cada puerta.
+   Todo el trazado es flujo + inset (sin medición por JS), así que el marco se
+   reajusta solo cuando la dirección crece o se acorta.
+   El bloque final de prefers-reduced-motion del archivo ya neutraliza estas
+   animaciones; aquí solo se conservan los estados finales. */
+
+.mc-idcard {
+  --mc-green: #00ff41;
+  --mc-line: rgba(0, 255, 65, 0.5);
+  --mc-line-hot: rgba(0, 255, 65, 0.95);
+  --mc-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  font-family: 'Fira Code', ui-monospace, SFMono-Regular, Menlo, monospace;
+  color: #e9fff0;
+}
+
+.mc-plate {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: clamp(54px, 7vw, 78px) 12px 30px;
+  overflow: hidden;
+}
+
+.mc-prompt {
+  position: absolute;
+  top: 14px;
+  left: 16px;
+  margin: 0;
+  font: 400 10px/1 'Fira Code', monospace;
+  letter-spacing: 0.06em;
+  color: rgba(0, 255, 65, 0.42);
+  pointer-events: none;
+}
+
+.mc-prompt span { color: rgba(0, 255, 65, 0.75); }
+
+.mc-line {
+  position: relative;
+  display: inline-flex;
+  align-items: baseline;
+  max-width: 100%;
+  white-space: nowrap;
+}
+
+.mc-bracket {
+  position: absolute;
+  inset: -18px -13px;
+  pointer-events: none;
+}
+
+.mc-side {
+  position: absolute;
+  background: var(--mc-line);
+  will-change: transform;
+  transition:
+    transform 0.5s var(--mc-ease) var(--d, 0s),
+    background-color 0.2s linear,
+    box-shadow 0.2s linear;
+}
+
+.mc-top { top: 0; left: 0; right: 0; height: 1px; transform-origin: left center; --d: 0s; }
+.mc-right { top: 0; right: 0; bottom: 0; width: 1px; transform-origin: center top; --d: 0.13s; }
+.mc-bottom { bottom: 0; left: 0; right: 0; height: 1px; transform-origin: right center; --d: 0.26s; }
+.mc-left { top: 0; left: 0; bottom: 0; width: 1px; transform-origin: center bottom; --d: 0.39s; }
+
+.mc-line:hover .mc-side,
+.mc-line:focus-within .mc-side {
+  background: var(--mc-line-hot);
+  box-shadow: 0 0 10px rgba(0, 255, 65, 0.35);
+}
+
+/* Las líneas entran plegadas y se despliegan en secuencia. */
+.mc-plate[data-draw='off'] .mc-top,
+.mc-plate[data-draw='off'] .mc-bottom { transform: scaleX(0); }
+
+.mc-plate[data-draw='off'] .mc-left,
+.mc-plate[data-draw='off'] .mc-right { transform: scaleY(0); }
+
+/* Salto sin transición: permite reiniciar el trazo en cada cambio de puerta. */
+.mc-snap .mc-side,
+.mc-snap .mc-addr { transition: none !important; }
+
+.mc-addr {
+  display: inline-flex;
+  align-items: baseline;
+  font-family: 'Fira Code', ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: clamp(16px, 3.4vw, 34px);
+  font-weight: 500;
+  letter-spacing: -0.012em;
+  line-height: 1.15;
+  color: #ffffff;
+  text-decoration: none;
+  transition: opacity 0.55s ease, filter 0.55s ease;
+}
+
+.mc-idcard:not(.is-in) .mc-addr {
+  opacity: 0;
+  filter: blur(7px);
+}
+
+.mc-handle {
+  position: relative;
+  color: #ffffff;
+  text-shadow: 0 0 22px rgba(0, 255, 65, 0.22);
+  transition: text-shadow 0.25s linear;
+}
+
+.mc-line:hover .mc-handle { text-shadow: 0 0 26px rgba(0, 255, 65, 0.42); }
+
+.mc-slot {
+  position: relative;
+  color: var(--mc-green);
+  opacity: 0.92;
+}
+
+.mc-addr:focus-visible {
+  outline: 2px solid rgba(0, 255, 65, 0.75);
+  outline-offset: 10px;
+}
+
+.mc-caret {
+  flex: none;
+  align-self: center;
+  width: 2px;
+  height: 0.78em;
+  margin-left: 5px;
+  background: var(--mc-green);
+  box-shadow: 0 0 9px rgba(0, 255, 65, 0.75);
+  animation: mc-blink 1.15s steps(1, end) infinite;
+}
+
+@keyframes mc-blink {
+  0%, 45% { opacity: 1; }
+  46%, 100% { opacity: 0; }
+}
+
+.mc-tag {
+  position: absolute;
+  font: 400 10.5px/1 'Fira Code', monospace;
+  letter-spacing: 0.1em;
+  color: rgba(0, 255, 65, 0.72);
+  white-space: nowrap;
+  pointer-events: none;
+  text-transform: lowercase;
+}
+
+.mc-tag::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  width: 1px;
+  height: 7px;
+  background: currentColor;
+  opacity: 0.5;
+}
+
+.mc-tag--me { left: 50%; bottom: calc(100% + 25px); transform: translateX(-50%); }
+.mc-tag--me::after { top: 100%; }
+
+.mc-tag--door { left: 50%; top: calc(100% + 25px); transform: translateX(-50%); color: rgba(0, 255, 65, 0.9); }
+.mc-tag--door::after { bottom: 100%; }
+
+.mc-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 52px;
+}
+
+.mc-tab {
+  appearance: none;
+  border: 1px solid rgba(0, 255, 65, 0.2);
+  background: rgba(0, 255, 65, 0.03);
+  color: rgba(233, 255, 240, 0.6);
+  font: 400 10.5px/1 'Fira Code', monospace;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 9px 12px;
+  cursor: pointer;
+  transition: color 0.18s linear, border-color 0.18s linear, background-color 0.18s linear;
+}
+
+.mc-tab:hover {
+  color: #ffffff;
+  border-color: rgba(0, 255, 65, 0.5);
+  background: rgba(0, 255, 65, 0.07);
+}
+
+.mc-tab[aria-pressed='true'] {
+  color: #06120a;
+  background: var(--mc-green);
+  border-color: var(--mc-green);
+  font-weight: 600;
+  box-shadow: 0 0 18px rgba(0, 255, 65, 0.28);
+}
+
+.mc-tab:focus-visible {
+  outline: 2px solid rgba(0, 255, 65, 0.75);
+  outline-offset: 2px;
+}
+
+.mc-hint {
+  margin: 16px 0 0;
+  font: 400 10px/1.5 'Fira Code', monospace;
+  letter-spacing: 0.04em;
+  color: rgba(233, 255, 240, 0.32);
+  text-align: center;
+}
+
+@media (max-width: 640px) {
+  .mc-prompt { display: none; }
+}
+
+@media (max-width: 380px) {
+  .mc-bracket { inset: -15px -8px; }
+  .mc-tabs { margin-top: 46px; gap: 5px; }
+  .mc-tab { padding: 8px 9px; letter-spacing: 0.08em; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mc-side,
+  .mc-addr,
+  .mc-handle,
+  .mc-tab { transition-duration: 0.01ms !important; }
+
+  .mc-caret { animation: none; opacity: 0.55; }
+
+  .mc-plate[data-draw='off'] .mc-top,
+  .mc-plate[data-draw='off'] .mc-bottom,
+  .mc-plate[data-draw='off'] .mc-left,
+  .mc-plate[data-draw='off'] .mc-right { transform: none; }
+
+  .mc-idcard:not(.is-in) .mc-addr { opacity: 1; filter: none; }
+}

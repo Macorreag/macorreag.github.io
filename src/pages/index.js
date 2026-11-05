@@ -9,6 +9,7 @@ import Reveal from '../components/reveal';
 import Repos from '../components/repos';
 import Codigofacilito from '../components/codigofacilito';
 import Blog from '../components/blog';
+import IdCard from '../components/id-card';
 import EdNav from '../components/education-nav';
 import Skills from '../components/skills';
 import Experience from '../components/experience';
@@ -39,6 +40,8 @@ export default () => (
       <Reveal delay={80}>
         <Blog />
       </Reveal>
+      {/* Cierre del documento: la firma con las cuatro puertas. Se revela sola. */}
+      <IdCard />
     </main>
     <FlyingAvatar />
     <ScrollIndicator />
