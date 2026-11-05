@@ -1,0 +1,79 @@
+# robots.txt — Miller Correa · Portafolio
+# https://macorreag.github.io
+# Política de rastreo para crawlers tradicionales y de IA (RFC 9309).
+
+User-agent: *
+Allow: /
+
+Sitemap: https://macorreag.github.io/sitemap.xml
+
+# Descubrimiento de capacidades para agentes (ARD / Agentic Resource Discovery)
+Agentmap: https://macorreag.github.io/.well-known/ai-catalog.json
+
+# ──────────────────────────────────────────────────────────────
+# Crawlers de IA — permitidos para indexar y responder preguntas.
+# Content Signals: https://contentsignals.org
+#   search   = permitido indexar/responder en buscadores
+#   ai-input = permitido usar como entrada/grounding/RAG en tiempo real
+#   ai-train = NO entrenar modelos base con el contenido
+# ──────────────────────────────────────────────────────────────
+
+User-agent: GPTBot
+Allow: /
+Content-Signal: search=yes, ai-input=yes, ai-train=no
+
+User-agent: OAI-SearchBot
+Allow: /
+Content-Signal: search=yes, ai-input=yes, ai-train=no
+
+User-agent: ChatGPT-User
+Allow: /
+Content-Signal: search=yes, ai-input=yes, ai-train=no
+
+User-agent: Claude-Web
+Allow: /
+Content-Signal: search=yes, ai-input=yes, ai-train=no
+
+User-agent: ClaudeBot
+Allow: /
+Content-Signal: search=yes, ai-input=yes, ai-train=no
+
+User-agent: anthropic-ai
+Allow: /
+Content-Signal: search=yes, ai-input=yes, ai-train=no
+
+User-agent: Google-Extended
+Allow: /
+Content-Signal: search=yes, ai-input=yes, ai-train=no
+
+User-agent: Amazonbot
+Allow: /
+Content-Signal: search=yes, ai-input=yes, ai-train=no
+
+User-agent: Bytespider
+Allow: /
+Content-Signal: search=yes, ai-input=yes, ai-train=no
+
+User-agent: CCBot
+Allow: /
+Content-Signal: search=yes, ai-input=yes, ai-train=no
+
+User-agent: Applebot-Extended
+Allow: /
+Content-Signal: search=yes, ai-input=yes, ai-train=no
+
+User-agent: PerplexityBot
+Allow: /
+Content-Signal: search=yes, ai-input=yes, ai-train=no
+
+User-agent: cohere-ai
+Allow: /
+Content-Signal: search=yes, ai-input=yes, ai-train=no
+
+User-agent: Meta-ExternalAgent
+Allow: /
+Content-Signal: search=yes, ai-input=yes, ai-train=no
+
+User-agent: Diffbot
+Allow: /
+Content-Signal: search=yes, ai-input=yes, ai-train=no
